@@ -9,175 +9,160 @@ import {
 } from './src/service/CalculatorService';
 import { lottoResults } from './src/settings/systemSettings.js';
 
-let lottos;
+let lottos = [];
 let purchasePrice = 0;
 
-function prizeBoardInit() {
-  document.addEventListener('DOMContentLoaded', () => {
-    const idMapping = {
-      THREE_MATCH: 'threeMatchPrice',
-      FOUR_MATCH: 'fourMatchPrice',
-      FIVE_MATCH: 'fiveMatchPrice',
-      FIVE_MATCH_WITH_BONUS: 'fiveMatchWithBonusPrice',
-      SIX_MATCH: 'sixMatchPrice',
-    };
+const elements = {
+  userMoneyInput: document.getElementById('userMoney'),
+  purchaseLottoButton: document.getElementById('purchaseLotto'),
+  lottosDiv: document.getElementById('lottos'),
+  checkUserNumberDiv: document.getElementById('checkUserNumber'),
+  checkResultButton: document.getElementById('checkResult'),
+  resultModal: document.getElementById('resultModal'),
+  resetButton: document.getElementById('resetGame'),
+  lottoList: document.getElementById('lottoList'),
+  revenueRateResult: document.getElementById('revenueRateResult'),
+};
 
-    Object.entries(idMapping).forEach(([key, id]) => {
-      const element = document.getElementById(id);
-      if (element) {
-        element.innerHTML = lottoResults.prizeMoney[key].toLocaleString();
-      }
-    });
+function initPrizeBoard() {
+  const idMapping = {
+    THREE_MATCH: 'threeMatchPrice',
+    FOUR_MATCH: 'fourMatchPrice',
+    FIVE_MATCH: 'fiveMatchPrice',
+    FIVE_MATCH_WITH_BONUS: 'fiveMatchWithBonusPrice',
+    SIX_MATCH: 'sixMatchPrice',
+  };
+
+  Object.entries(idMapping).forEach(([key, id]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = lottoResults.prizeMoney[key].toLocaleString();
+    }
   });
 }
-prizeBoardInit();
 
-document.addEventListener('DOMContentLoaded', () => {
-  const userMoneyInput = document.getElementById('userMoney');
-  const purchaseLottoButton = document.getElementById('purchaseLotto');
-  const lottosDiv = document.getElementById('lottos');
-  const checkUserNumberDiv = document.getElementById('checkUserNumber');
-  const checkResultButton = document.getElementById('checkResult');
+function resetInputs(ids) {
+  ids.forEach((id) => {
+    const input = document.getElementById(id);
+    if (input) input.value = '';
+  });
+}
 
-  purchaseLottoButton.addEventListener('click', () => {
-    const inputValue = userMoneyInput.value.trim();
+function updateWinCount(winCount) {
+  const idMapping = {
+    THREE_MATCH: 'threeMatchAmount',
+    FOUR_MATCH: 'fourMatchAmount',
+    FIVE_MATCH: 'fiveMatchAmount',
+    FIVE_MATCH_WITH_BONUS: 'fiveMatchWithBonusAmount',
+    SIX_MATCH: 'sixMatchAmount',
+  };
 
-    try {
-      const ticket = validateLottoPurchase(inputValue);
-      purchasePrice = +inputValue;
-      lottos = makeLotto(ticket, 'web');
-      showLottoList(lottos);
-
-      lottosDiv.classList.remove('hidden');
-      checkUserNumberDiv.classList.remove('hidden');
-      userMoneyInput.value = '';
-    } catch (error) {
-      alert(error.message);
+  Object.entries(idMapping).forEach(([key, id]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = `${winCount[key].toLocaleString()}개`;
     }
   });
-  checkResultButton.addEventListener('click', () => {
-    const firstNumber = document.getElementById('firstNumber').value;
-    const secondNumber = document.getElementById('secondNumber').value;
-    const thirdNumber = document.getElementById('thirdNumber').value;
-    const fourthNumber = document.getElementById('fourthNumber').value;
-    const fifthNumber = document.getElementById('fifthNumber').value;
-    const sixthNumber = document.getElementById('sixthNumber').value;
-    const bonusNumber = document.getElementById('bonusNumber').value;
-    const resultModal = document.getElementById('resultModal');
-    try {
-      const userLotto = new Lotto([
-        firstNumber,
-        secondNumber,
-        thirdNumber,
-        fourthNumber,
-        fifthNumber,
-        sixthNumber,
-      ]);
-      resetInputValue('firstNumber');
-      resetInputValue('secondNumber');
-      resetInputValue('thirdNumber');
-      resetInputValue('fourthNumber');
-      resetInputValue('fifthNumber');
-      resetInputValue('sixthNumber');
-      resetInputValue('bonusNumber');
-      const parsedLotto = validateBonusNumber(userLotto, bonusNumber);
+}
 
-      const winCount = calculateWins(lottos, parsedLotto);
-      const total = calculatePrize(winCount, lottoResults.prizeMoney);
-      const revenueRate = calculateRevenueRate(total, purchasePrice);
-
-      showRevenueRate(revenueRate);
-      showWinCount(winCount);
-      resultModal.classList.remove('hidden');
-    } catch (error) {
-      alert(error.message);
-    }
+function showLottoList(lottos) {
+  resetLottoList();
+  lottos.forEach((lotto) => {
+    const li = document.createElement('li');
+    li.textContent = lotto.numbers.join(', ');
+    elements.lottoList.appendChild(li);
   });
-});
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-  const resetButton = document.getElementById('resetGame');
-  resetButton.addEventListener('click', () => {
-    retryGame();
-  });
-});
+function resetLottoList() {
+  while (elements.lottoList.firstChild) {
+    elements.lottoList.removeChild(elements.lottoList.firstChild);
+  }
+}
+
 function showRevenueRate(revenueRate) {
-  const revenueRateResult = document.getElementById('revenueRateResult');
-  revenueRateResult.innerHTML = `당신의 총 수익률은 ${revenueRate.toFixed(
+  elements.revenueRateResult.textContent = `당신의 총 수익률은 ${revenueRate.toFixed(
     1,
   )}%입니다.`;
 }
 
-function showWinCount(winCount) {
-  const idMapping = {
-    THREE_MATCH: 'threeMatchAmount',
-    FOUR_MATCH: 'fourMatchAmount',
-    FIVE_MATCH: 'fiveMatchAmount',
-    FIVE_MATCH_WITH_BONUS: 'fiveMatchWithBonusAmount',
-    SIX_MATCH: 'sixMatchAmount',
-  };
-
-  Object.entries(idMapping).forEach(([key, id]) => {
-    const element = document.getElementById(id);
-
-    if (element) {
-      element.innerHTML = winCount[key].toLocaleString();
-    }
+function retryGame() {
+  purchasePrice = 0;
+  lottos = [];
+  resetInputs([
+    'firstNumber',
+    'secondNumber',
+    'thirdNumber',
+    'fourthNumber',
+    'fifthNumber',
+    'sixthNumber',
+    'bonusNumber',
+  ]);
+  resetLottoList();
+  updateWinCount({
+    THREE_MATCH: 0,
+    FOUR_MATCH: 0,
+    FIVE_MATCH: 0,
+    FIVE_MATCH_WITH_BONUS: 0,
+    SIX_MATCH: 0,
   });
+  elements.resultModal.classList.add('hidden');
+  elements.checkUserNumberDiv.classList.add('hidden');
 }
-function resetInputValue(number) {
-  document.getElementById(number).value = '';
-}
-function resetWinCount() {
-  const idMapping = {
-    THREE_MATCH: 'threeMatchAmount',
-    FOUR_MATCH: 'fourMatchAmount',
-    FIVE_MATCH: 'fiveMatchAmount',
-    FIVE_MATCH_WITH_BONUS: 'fiveMatchWithBonusAmount',
-    SIX_MATCH: 'sixMatchAmount',
-  };
 
-  Object.entries(idMapping).forEach(([key, id]) => {
-    const element = document.getElementById(id);
-
-    if (element) {
-      element.innerHTML = 'n개';
-    }
-  });
-}
-function resetLottoList(lottoList) {
-  while (lottoList.firstChild) {
-    lottoList.removeChild(lottoList.firstChild);
+function handlePurchaseLotto() {
+  const inputValue = elements.userMoneyInput.value.trim();
+  try {
+    const ticket = validateLottoPurchase(inputValue);
+    purchasePrice = +inputValue;
+    lottos = makeLotto(ticket, 'web');
+    showLottoList(lottos);
+    elements.lottosDiv.classList.remove('hidden');
+    elements.checkUserNumberDiv.classList.remove('hidden');
+    elements.userMoneyInput.value = '';
+  } catch (error) {
+    alert(error.message);
   }
 }
 
-function showLottoList(lottos) {
-  const lottoList = document.getElementById('lottoList');
-  resetLottoList(lottoList);
+function handleCheckResult() {
+  try {
+    const inputIds = [
+      'firstNumber',
+      'secondNumber',
+      'thirdNumber',
+      'fourthNumber',
+      'fifthNumber',
+      'sixthNumber',
+    ];
+    const userNumbers = inputIds.map((id) => document.getElementById(id).value);
+    const bonusNumber = document.getElementById('bonusNumber').value;
 
-  lottos.forEach((lotto) => {
-    const li = document.createElement('li');
-    li.textContent = lotto.numbers.join(', ');
-    lottoList.appendChild(li);
-  });
+    const userLotto = new Lotto(userNumbers);
+    resetInputs([...inputIds, 'bonusNumber']);
+
+    const parsedLotto = validateBonusNumber(userLotto, bonusNumber);
+    const winCount = calculateWins(lottos, parsedLotto);
+    const totalPrize = calculatePrize(winCount, lottoResults.prizeMoney);
+    const revenueRate = calculateRevenueRate(totalPrize, purchasePrice);
+
+    showRevenueRate(revenueRate);
+    updateWinCount(winCount);
+    elements.resultModal.classList.remove('hidden');
+  } catch (error) {
+    alert(error.message);
+  }
 }
-function retryGame() {
-  // 1.
-  purchasePrice = 0;
-  lottos = [];
-  //2.
-  const lottoList = document.getElementById('lottoList');
-  resetInputValue('firstNumber');
-  resetInputValue('secondNumber');
-  resetInputValue('thirdNumber');
-  resetInputValue('fourthNumber');
-  resetInputValue('fifthNumber');
-  resetInputValue('sixthNumber');
-  resetInputValue('bonusNumber');
-  resetLottoList(lottoList);
-  resetWinCount();
-  const resultModal = document.getElementById('resultModal');
-  resultModal.classList.add('hidden');
-  const checkUserNumberDiv = document.getElementById('checkUserNumber');
-  checkUserNumberDiv.classList.add('hidden');
+
+function bindEventListeners() {
+  elements.purchaseLottoButton.addEventListener('click', handlePurchaseLotto);
+  elements.checkResultButton.addEventListener('click', handleCheckResult);
+  elements.resetButton.addEventListener('click', retryGame);
 }
+
+function initializeApp() {
+  initPrizeBoard();
+  bindEventListeners();
+}
+
+document.addEventListener('DOMContentLoaded', initializeApp);
