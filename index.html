@@ -17,15 +17,26 @@
       <div>
         <p>구입할 금액을 입력해주세요.</p>
         <div>
-          <input type="text" id="userInput" />
-          <button type="submit" id="myButton">구입</button>
+          <input type="text" id="userMoney" />
+          <button type="submit" id="purchaseLotto">구입</button>
         </div>
         <div id="lottos" class="hidden">
           <ul id="lottoList"></ul>
         </div>
 
         <div id="checkUserNumber" class="hidden">
+          <ul>
+            <li><input type="text" id="firstNumber" /></li>
+            <li><input type="text" id="secondNumber" /></li>
+            <li><input type="text" id="thirdNumber" /></li>
+            <li><input type="text" id="fourthNumber" /></li>
+            <li><input type="text" id="fifthNumber" /></li>
+            <li><input type="text" id="sixthNumber" /></li>
+          </ul>
+          <input type="text" id="bonusNumber" />
           <p>지난 주 당첨번호 6개와 보너스 번호 1개를 입력해주세요.</p>
+
+          <button id="checkResult">내 결과 보기</button>
         </div>
       </div>
       <footer>
