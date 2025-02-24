@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fifthNumber = document.getElementById('fifthNumber').value;
     const sixthNumber = document.getElementById('sixthNumber').value;
     const bonusNumber = document.getElementById('bonusNumber').value;
+    const resultModal = document.getElementById('resultModal');
     try {
       const userLotto = new Lotto([
         firstNumber,
@@ -72,17 +73,32 @@ document.addEventListener('DOMContentLoaded', () => {
         fifthNumber,
         sixthNumber,
       ]);
-
+      resetInputValue('firstNumber');
+      resetInputValue('secondNumber');
+      resetInputValue('thirdNumber');
+      resetInputValue('fourthNumber');
+      resetInputValue('fifthNumber');
+      resetInputValue('sixthNumber');
+      resetInputValue('bonusNumber');
       const parsedLotto = validateBonusNumber(userLotto, bonusNumber);
+
       const winCount = calculateWins(lottos, parsedLotto);
       const total = calculatePrize(winCount, lottoResults.prizeMoney);
       const revenueRate = calculateRevenueRate(total, purchasePrice);
 
       showRevenueRate(revenueRate);
       showWinCount(winCount);
+      resultModal.classList.remove('hidden');
     } catch (error) {
       alert(error.message);
     }
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const resetButton = document.getElementById('resetGame');
+  resetButton.addEventListener('click', () => {
+    retryGame();
   });
 });
 function showRevenueRate(revenueRate) {
@@ -91,6 +107,7 @@ function showRevenueRate(revenueRate) {
     1,
   )}%입니다.`;
 }
+
 function showWinCount(winCount) {
   const idMapping = {
     THREE_MATCH: 'threeMatchAmount',
@@ -108,12 +125,35 @@ function showWinCount(winCount) {
     }
   });
 }
-function showLottoList(lottos) {
-  const lottoList = document.getElementById('lottoList');
+function resetInputValue(number) {
+  document.getElementById(number).value = '';
+}
+function resetWinCount() {
+  const idMapping = {
+    THREE_MATCH: 'threeMatchAmount',
+    FOUR_MATCH: 'fourMatchAmount',
+    FIVE_MATCH: 'fiveMatchAmount',
+    FIVE_MATCH_WITH_BONUS: 'fiveMatchWithBonusAmount',
+    SIX_MATCH: 'sixMatchAmount',
+  };
 
+  Object.entries(idMapping).forEach(([key, id]) => {
+    const element = document.getElementById(id);
+
+    if (element) {
+      element.innerHTML = 'n개';
+    }
+  });
+}
+function resetLottoList(lottoList) {
   while (lottoList.firstChild) {
     lottoList.removeChild(lottoList.firstChild);
   }
+}
+
+function showLottoList(lottos) {
+  const lottoList = document.getElementById('lottoList');
+  resetLottoList(lottoList);
 
   lottos.forEach((lotto) => {
     const li = document.createElement('li');
@@ -121,4 +161,23 @@ function showLottoList(lottos) {
     lottoList.appendChild(li);
   });
 }
-function retryGame() {}
+function retryGame() {
+  // 1.
+  purchasePrice = 0;
+  lottos = [];
+  //2.
+  const lottoList = document.getElementById('lottoList');
+  resetInputValue('firstNumber');
+  resetInputValue('secondNumber');
+  resetInputValue('thirdNumber');
+  resetInputValue('fourthNumber');
+  resetInputValue('fifthNumber');
+  resetInputValue('sixthNumber');
+  resetInputValue('bonusNumber');
+  resetLottoList(lottoList);
+  resetWinCount();
+  const resultModal = document.getElementById('resultModal');
+  resultModal.classList.add('hidden');
+  const checkUserNumberDiv = document.getElementById('checkUserNumber');
+  checkUserNumberDiv.classList.add('hidden');
+}
