@@ -1,0 +1,12 @@
+export const elements = {
+  userMoneyInput: document.getElementById('user-money'),
+  purchaseLottoButton: document.getElementById('purchase-lotto'),
+  lottosDiv: document.getElementById('lottos'),
+  checkUserNumberDiv: document.getElementById('check-user-number'),
+  checkResultButton: document.getElementById('check-result'),
+  resultModal: document.getElementById('result-modal'),
+  resetButton: document.getElementById('reset-game'),
+  lottoList: document.getElementById('lotto-list'),
+  revenueRateResult: document.getElementById('revenue-rate-result'),
+  purchaseAmount: document.getElementById('purchase-amount'),
+};
