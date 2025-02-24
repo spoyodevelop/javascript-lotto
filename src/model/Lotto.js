@@ -8,6 +8,7 @@ class Lotto {
 
   constructor(numbers) {
     this.#lottoValidation(numbers);
+
     this.#numbers = numbers.sort((a, b) => a - b);
   }
   #lottoValidation(numbers) {
@@ -17,6 +18,7 @@ class Lotto {
     if (numbers.length !== new Set(numbers).size)
       throw new Error(ERROR_MESSAGE.duplicatedNumbers);
     validateNumberInRange(numbers);
+    return numbers.map((number) => Number(number));
   }
   get numbers() {
     return this.#numbers;
