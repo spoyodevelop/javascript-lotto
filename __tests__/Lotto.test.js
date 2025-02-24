@@ -5,7 +5,7 @@ import validateNumberInRange from '../src/Validation/validateNumberInRange.js';
 describe('Lotto class test', () => {
   it('로또를 생성했을 때 6개의 번호를 집어넣으면, 그 숫자를 반환한다.', () => {
     const testCase = [1, 2, 3, 4, 5, 6];
-    expect(new Lotto(testCase).numbers).toBe(testCase);
+    expect(new Lotto(testCase).numbers).toStrictEqual(testCase);
   });
 
   it('로또를 생성했을 때 5개의 숫자를 집어 넣을 경우 에러를 던진다.', () => {
