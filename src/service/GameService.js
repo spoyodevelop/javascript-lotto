@@ -26,11 +26,12 @@ function handlePurchaseLotto() {
     gameState.setLottos(makeLotto(ticket, 'web'));
     showLottoList(gameState.lottos);
     elements.purchaseAmount.innerHTML = `총 ${ticket}개를 구매하였습니다.`;
+    //TODO : hidden 이거 하는거 한번 분리해볼것
     elements.lottosDiv.classList.remove('hidden');
     elements.checkUserNumberDiv.classList.remove('hidden');
-    elements.userMoneyInput.value = '';
+    resetInputs(['user-money']);
   } catch (error) {
-    elements.userMoneyInput.value = '';
+    resetInputs(['user-money']);
     alert(error.message);
   }
 }
