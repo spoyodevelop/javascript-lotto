@@ -1,6 +1,8 @@
 import makeLotto from './src/service/LottoService.js';
-import { getPurchasePrice } from './src/service/ParsingService.js';
+
 import validateLottoPurchase from './src/Validation/validateLottoPurchase';
+
+let lottos;
 
 document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('userInput');
@@ -10,9 +12,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputValue = input.value.trim();
     try {
       const ticket = validateLottoPurchase(inputValue);
-      alert(`총 ${ticket}개를 구매했습니다.`);
+      lottos = makeLotto(ticket, 'web');
+
+      showLottoList(lottos);
     } catch (error) {
       alert(error.message);
     }
   });
 });
+
+function showLottoList(lottos) {
+  const lottoList = document.getElementById('lottoList');
+
+  while (lottoList.firstChild) {
+    lottoList.removeChild(lottoList.firstChild);
+  }
+
+  lottos.forEach((lotto) => {
+    console.log(lotto.numbers);
+    const li = document.createElement('li');
+
+    li.textContent = lotto.numbers.join(', ');
+    lottoList.appendChild(li);
+  });
+}
