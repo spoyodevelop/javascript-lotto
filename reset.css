@@ -34,9 +34,9 @@ input,
 textarea,
 select {
   font: inherit;
-  border: none;
+  /* border: none;
   background: none;
-  outline: none;
+  outline: none; */
 }
 
 img {
