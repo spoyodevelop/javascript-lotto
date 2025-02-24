@@ -7,9 +7,9 @@ class Lotto {
   #numbers;
 
   constructor(numbers) {
-    this.#lottoValidation(numbers);
+    const parsedNumbers = this.#lottoValidation(numbers);
 
-    this.#numbers = numbers.sort((a, b) => a - b);
+    this.#numbers = parsedNumbers.sort((a, b) => a - b);
   }
   #lottoValidation(numbers) {
     numbers.forEach((number) => validateNumber(number));
