@@ -5,10 +5,9 @@
     <link rel="stylesheet" href="./index.css" />
     <meta charset="UTF-8" />
     <title>🎱 행운의 로또</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <script type="module" src="./script.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
   </head>
 
   <body>
@@ -17,28 +16,51 @@
       <div>
         <p>구입할 금액을 입력해주세요.</p>
         <div>
-          <input type="text" id="userMoney" />
-          <button type="submit" id="purchaseLotto">구입</button>
+          <label for="user-money">구입 금액:</label>
+          <input type="number" id="user-money" min="1000" step="1000" />
+          <button type="button" id="purchase-lotto">구입</button>
         </div>
+
         <div id="lottos" class="hidden">
-          <ul id="lottoList"></ul>
+          <p id="purchase-amount">총 n개를 구매했습니다.</p>
+          <ul id="lotto-list"></ul>
         </div>
 
-        <div id="checkUserNumber" class="hidden">
-          <ul>
-            <li><input type="text" id="firstNumber" /></li>
-            <li><input type="text" id="secondNumber" /></li>
-            <li><input type="text" id="thirdNumber" /></li>
-            <li><input type="text" id="fourthNumber" /></li>
-            <li><input type="text" id="fifthNumber" /></li>
-            <li><input type="text" id="sixthNumber" /></li>
-          </ul>
-          <input type="text" id="bonusNumber" />
+        <div id="check-user-number" class="hidden">
           <p>지난 주 당첨번호 6개와 보너스 번호 1개를 입력해주세요.</p>
+          <ul>
+            <li>
+              <label for="first-number" />
+              <input type="number" id="first-number" min="1" max="45" />
+            </li>
+            <li>
+              <label for="second-number" />
+              <input type="number" id="second-number" min="1" max="45" />
+            </li>
+            <li>
+              <label for="third-number" />
+              <input type="number" id="third-number" min="1" max="45" />
+            </li>
+            <li>
+              <label for="fourth-number" />
+              <input type="number" id="fourth-number" min="1" max="45" />
+            </li>
+            <li>
+              <label for="fifth-number" />
+              <input type="number" id="fifth-number" min="1" max="45" />
+            </li>
+            <li>
+              <label for="sixth-number" />
+              <input type="number" id="sixth-number" min="1" max="45" />
+            </li>
+          </ul>
+          <label for="bonus-number">보너스 번호</label>
+          <input type="number" id="bonus-number" min="1" max="45" />
 
-          <button id="checkResult">내 결과 보기</button>
+          <button type="button" id="check-result">내 결과 보기</button>
         </div>
-        <div id="resultModal" class="hidden">
+
+        <div id="result-modal" class="hidden">
           <h2>🏆 당첨 통계 🏆</h2>
           <table>
             <thead>
@@ -50,68 +72,39 @@
             </thead>
             <tbody>
               <tr>
-                <th>
-                  <p>3개</p>
-                </th>
-                <th>
-                  <p id="threeMatchPrice"></p>
-                </th>
-                <th>
-                  <p id="threeMatchAmount">n개</p>
-                </th>
+                <th><p>3개</p></th>
+                <th><p id="three-match-price"></p></th>
+                <th><p id="three-match-amount">n개</p></th>
               </tr>
               <tr>
-                <th>
-                  <p>4개</p>
-                </th>
-                <th>
-                  <p id="fourMatchPrice"></p>
-                </th>
-                <th>
-                  <p id="fourMatchAmount">n개</p>
-                </th>
+                <th><p>4개</p></th>
+                <th><p id="four-match-price"></p></th>
+                <th><p id="four-match-amount">n개</p></th>
               </tr>
               <tr>
-                <th>
-                  <p>5개</p>
-                </th>
-                <th>
-                  <p id="fiveMatchPrice"></p>
-                </th>
-                <th>
-                  <p id="fiveMatchAmount">n개</p>
-                </th>
+                <th><p>5개</p></th>
+                <th><p id="five-match-price"></p></th>
+                <th><p id="five-match-amount">n개</p></th>
               </tr>
               <tr>
-                <th>
-                  <p>5개+보너스볼</p>
-                </th>
-                <th>
-                  <p id="fiveMatchWithBonusPrice"></p>
-                </th>
-                <th>
-                  <p id="fiveMatchWithBonusAmount">n개</p>
-                </th>
+                <th><p>5개+보너스볼</p></th>
+                <th><p id="five-match-with-bonus-price"></p></th>
+                <th><p id="five-match-with-bonus-amount">n개</p></th>
               </tr>
               <tr>
-                <th>
-                  <p>6개</p>
-                </th>
-                <th>
-                  <p id="sixMatchPrice"></p>
-                </th>
-                <th>
-                  <p id="sixMatchAmount">n개</p>
-                </th>
+                <th><p>6개</p></th>
+                <th><p id="six-match-price"></p></th>
+                <th><p id="six-match-amount">n개</p></th>
               </tr>
             </tbody>
           </table>
-          <p id="revenueRateResult">당신의 총 수익률은 %입니다.</p>
-          <button id="resetGame">다시 시작하기</button>
+          <p id="revenue-rate-result">당신의 총 수익률은 %입니다.</p>
+          <button type="button" id="reset-game">다시 시작하기</button>
         </div>
       </div>
+
       <footer>
-        <p>copyright 2025. spoyodevelop</p>
+        <small>&copy; 2025. spoyodevelop</small>
       </footer>
     </div>
     <script type="module" src="./src/step2-index.js"></script>
