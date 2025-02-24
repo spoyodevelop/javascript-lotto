@@ -12,22 +12,25 @@ import { lottoResults } from './src/settings/systemSettings.js';
 let lottos;
 let purchasePrice = 0;
 
-document.addEventListener('DOMContentLoaded', () => {
-  const idMapping = {
-    THREE_MATCH: 'threeMatchPrice',
-    FOUR_MATCH: 'fourMatchPrice',
-    FIVE_MATCH: 'fiveMatchPrice',
-    FIVE_MATCH_WITH_BONUS: 'fiveMatchWithBonusPrice',
-    SIX_MATCH: 'sixMatchPrice',
-  };
+function prizeBoardInit() {
+  document.addEventListener('DOMContentLoaded', () => {
+    const idMapping = {
+      THREE_MATCH: 'threeMatchPrice',
+      FOUR_MATCH: 'fourMatchPrice',
+      FIVE_MATCH: 'fiveMatchPrice',
+      FIVE_MATCH_WITH_BONUS: 'fiveMatchWithBonusPrice',
+      SIX_MATCH: 'sixMatchPrice',
+    };
 
-  Object.entries(idMapping).forEach(([key, id]) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.innerHTML = lottoResults.prizeMoney[key].toLocaleString(); // 천 단위 콤마 추가
-    }
+    Object.entries(idMapping).forEach(([key, id]) => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.innerHTML = lottoResults.prizeMoney[key].toLocaleString();
+      }
+    });
   });
-});
+}
+prizeBoardInit();
 
 document.addEventListener('DOMContentLoaded', () => {
   const userMoneyInput = document.getElementById('userMoney');
@@ -69,20 +72,36 @@ document.addEventListener('DOMContentLoaded', () => {
         fifthNumber,
         sixthNumber,
       ]);
-      const parsedLotto = validateBonusNumber(userLotto, bonusNumber);
 
+      const parsedLotto = validateBonusNumber(userLotto, bonusNumber);
       const winCount = calculateWins(lottos, parsedLotto);
       const total = calculatePrize(winCount, lottoResults.prizeMoney);
       const revenueRate = calculateRevenueRate(total, purchasePrice);
 
-      calculatePrize();
-      calculateRevenueRate();
+      showWinCount(winCount);
     } catch (error) {
       alert(error.message);
     }
   });
 });
 
+function showWinCount(winCount) {
+  const idMapping = {
+    THREE_MATCH: 'threeMatchAmount',
+    FOUR_MATCH: 'fourMatchAmount',
+    FIVE_MATCH: 'fiveMatchAmount',
+    FIVE_MATCH_WITH_BONUS: 'fiveMatchWithBonusAmount',
+    SIX_MATCH: 'sixMatchAmount',
+  };
+
+  Object.entries(idMapping).forEach(([key, id]) => {
+    const element = document.getElementById(id);
+
+    if (element) {
+      element.innerHTML = winCount[key].toLocaleString();
+    }
+  });
+}
 function showLottoList(lottos) {
   const lottoList = document.getElementById('lottoList');
 
@@ -91,7 +110,6 @@ function showLottoList(lottos) {
   }
 
   lottos.forEach((lotto) => {
-    console.log(lotto.numbers);
     const li = document.createElement('li');
     li.textContent = lotto.numbers.join(', ');
     lottoList.appendChild(li);
