@@ -78,13 +78,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const total = calculatePrize(winCount, lottoResults.prizeMoney);
       const revenueRate = calculateRevenueRate(total, purchasePrice);
 
+      showRevenueRate(revenueRate);
       showWinCount(winCount);
     } catch (error) {
       alert(error.message);
     }
   });
 });
-
+function showRevenueRate(revenueRate) {
+  const revenueRateResult = document.getElementById('revenueRateResult');
+  revenueRateResult.innerHTML = `당신의 총 수익률은 ${revenueRate.toFixed(
+    1,
+  )}%입니다.`;
+}
 function showWinCount(winCount) {
   const idMapping = {
     THREE_MATCH: 'threeMatchAmount',
@@ -115,3 +121,4 @@ function showLottoList(lottos) {
     lottoList.appendChild(li);
   });
 }
+function retryGame() {}
