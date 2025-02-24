@@ -5,7 +5,7 @@ import validateNumberInRange from './validateNumberInRange.js';
 export default function validateBonusNumber(lotto, bonusNumber) {
   validateNumber(bonusNumber);
   validateNumberInRange([bonusNumber]);
-  if (lotto.numbers.includes(bonusNumber))
+  if (lotto.numbers.includes(Number(bonusNumber)))
     throw new Error(ERROR_MESSAGE.duplicatedBonusNumbers);
   return { checkedLotto: lotto, checkedBonusNumber: Number(bonusNumber) };
 }
