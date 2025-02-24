@@ -301,12 +301,12 @@ function handlePurchaseLotto() {
     gameState.setPurchasePrice(+inputValue);
     gameState.setLottos(makeLotto(ticket, "web"));
     showLottoList(gameState.lottos);
-    elements.purchaseAmount.innerHTML = `총 ${ticket}개를 구매하였습니다.`;
+    elements.purchaseAmount.textContent = `총 ${ticket}개를 구매하였습니다.`;
     elements.lottosDiv.classList.remove("hidden");
     elements.checkUserNumberDiv.classList.remove("hidden");
-    elements.userMoneyInput.value = "";
+    resetInputs(["user-money"]);
   } catch (error) {
-    elements.userMoneyInput.value = "";
+    resetInputs(["user-money"]);
     alert(error.message);
   }
 }
