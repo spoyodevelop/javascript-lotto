@@ -2,6 +2,7 @@
 <html lang="ko">
   <head>
     <link rel="stylesheet" href="./reset.css" />
+    <link rel="stylesheet" href="./index.css" />
     <meta charset="UTF-8" />
     <title>🎱 행운의 로또</title>
 
@@ -19,8 +20,12 @@
           <input type="text" id="userInput" />
           <button type="submit" id="myButton">구입</button>
         </div>
-        <div id="lottos">
+        <div id="lottos" class="hidden">
           <ul id="lottoList"></ul>
+        </div>
+
+        <div id="checkUserNumber" class="hidden">
+          <p>지난 주 당첨번호 6개와 보너스 번호 1개를 입력해주세요.</p>
         </div>
       </div>
       <footer>

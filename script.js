@@ -7,14 +7,17 @@ let lottos;
 document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('userInput');
   const button = document.getElementById('myButton');
+  const lottosDiv = document.getElementById('lottos');
+  const checkUserNumberDiv = document.getElementById('checkUserNumber');
 
   button.addEventListener('click', async () => {
     const inputValue = input.value.trim();
     try {
       const ticket = validateLottoPurchase(inputValue);
       lottos = makeLotto(ticket, 'web');
-
       showLottoList(lottos);
+      lottosDiv.classList.remove('hidden');
+      checkUserNumberDiv.classList.remove('hidden');
     } catch (error) {
       alert(error.message);
     }
@@ -31,7 +34,6 @@ function showLottoList(lottos) {
   lottos.forEach((lotto) => {
     console.log(lotto.numbers);
     const li = document.createElement('li');
-
     li.textContent = lotto.numbers.join(', ');
     lottoList.appendChild(li);
   });
