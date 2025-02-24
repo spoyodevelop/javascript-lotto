@@ -1,0 +1,70 @@
+import { lottoResults } from '../settings/systemSettings.js';
+import { elements } from './elements.js';
+
+function initPrizeBoard() {
+  const idMapping = {
+    THREE_MATCH: 'three-match-price',
+    FOUR_MATCH: 'four-match-price',
+    FIVE_MATCH: 'five-match-price',
+    FIVE_MATCH_WITH_BONUS: 'five-match-with-bonus-price',
+    SIX_MATCH: 'six-match-price',
+  };
+
+  Object.entries(idMapping).forEach(([key, id]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = lottoResults.prizeMoney[key].toLocaleString();
+    }
+  });
+}
+
+function resetInputs(ids) {
+  ids.forEach((id) => {
+    const input = document.getElementById(id);
+    if (input) input.value = '';
+  });
+}
+function updateWinCount(winCount) {
+  const idMapping = {
+    THREE_MATCH: 'three-match-amount',
+    FOUR_MATCH: 'four-match-amount',
+    FIVE_MATCH: 'five-match-amount',
+    FIVE_MATCH_WITH_BONUS: 'five-match-with-bonus-amount',
+    SIX_MATCH: 'six-match-amount',
+  };
+
+  Object.entries(idMapping).forEach(([key, id]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = `${winCount[key].toLocaleString()}개`;
+    }
+  });
+}
+function showLottoList(lottos) {
+  resetLottoList();
+  lottos.forEach((lotto) => {
+    const li = document.createElement('li');
+    li.textContent = lotto.numbers.join(', ');
+    elements.lottoList.appendChild(li);
+  });
+}
+function resetLottoList() {
+  while (elements.lottoList.firstChild) {
+    elements.lottoList.removeChild(elements.lottoList.firstChild);
+  }
+}
+
+function showRevenueRate(revenueRate) {
+  elements.revenueRateResult.textContent = `당신의 총 수익률은 ${revenueRate.toFixed(
+    1,
+  )}%입니다.`;
+}
+
+export {
+  initPrizeBoard,
+  resetInputs,
+  updateWinCount,
+  showLottoList,
+  resetLottoList,
+  showRevenueRate,
+};
