@@ -1,18 +1,18 @@
-import gameState from '../state/State.js';
-import { elements } from '../View/elements.js';
-import makeLotto from './LottoService.js';
-import validateLottoPurchase from '../Validation/validateLottoPurchase.js';
-import validateBonusNumber from '../Validation/validateBonusNumber.js';
 import Lotto from '../model/Lotto.js';
-import { showLottoList } from '../View/LottoView.js';
-import { resetInputs } from '../View/LottoView.js';
+import gameState from '../state/state.js';
+import { elements } from '../View/elements.js';
+import { lottoResults } from '../settings/systemSettings.js';
+import makeLotto from './LottoService.js';
 import {
   calculatePrize,
   calculateRevenueRate,
   calculateWins,
 } from './CalculatorService.js';
-import { lottoResults } from '../settings/systemSettings';
+import validateLottoPurchase from '../Validation/validateLottoPurchase.js';
+import validateBonusNumber from '../Validation/validateBonusNumber.js';
 import {
+  showLottoList,
+  resetInputs,
   showRevenueRate,
   updateWinCount,
   resetLottoList,
@@ -30,6 +30,7 @@ function handlePurchaseLotto() {
     elements.checkUserNumberDiv.classList.remove('hidden');
     elements.userMoneyInput.value = '';
   } catch (error) {
+    elements.userMoneyInput.value = '';
     alert(error.message);
   }
 }
@@ -48,7 +49,8 @@ function handleCheckResult() {
     const bonusNumber = document.getElementById('bonus-number').value;
 
     const userLotto = new Lotto(userNumbers);
-    resetInputs([...inputIds, 'bonus-number']);
+    // 음.. 조금 고민해 보고 리셋 할지 결정하자.
+    // resetInputs([...inputIds, 'bonus-number']);
 
     const parsedLotto = validateBonusNumber(userLotto, bonusNumber);
     const winCount = calculateWins(gameState.lottos, parsedLotto);
