@@ -38,9 +38,12 @@ body {
   background-color: var(--btn-primary);
   display: flex;
   align-items: center;
-
+  margin-bottom: 84px;
   height: 64px;
   width: 100%;
+}
+.margin-top-l {
+  margin-top: 40px;
 }
 
 .lotto-title {
@@ -60,11 +63,11 @@ body {
 /* 레이아웃 */
 .lotto-layout {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   flex-direction: column;
   width: 414px;
-  height: 727px;
+  height: 600px;
   border: 1px solid var(--lotto-greyscale-5-12);
   border-radius: 4px;
   background-color: var(--lotto-greyscale-1);
@@ -78,6 +81,7 @@ body {
   min-height: 80px;
   border-top: var(--btn-border) 1px solid;
   width: 100%;
+  margin-top: 69px;
 }
 .margin-bottom-m {
   margin-bottom: 25px;
@@ -123,7 +127,7 @@ body {
 /* 입력창 */
 .user-input {
   border-radius: 4px;
-  border: 1px solid var(--lotto-greyscale-2);
+  border: 1px solid var(--lotto-greyscale-3);
   padding: 5px;
 }
 
