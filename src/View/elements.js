@@ -9,4 +9,5 @@ export const elements = {
   lottoList: document.getElementById('lotto-list'),
   revenueRateResult: document.getElementById('revenue-rate-result'),
   purchaseAmount: document.getElementById('purchase-amount'),
+  closeButton: document.getElementById('close-button'),
 };
