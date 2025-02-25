@@ -12,6 +12,8 @@ function bindEventListeners() {
   elements.resetButton.addEventListener('click', retryGame);
 }
 
+// TODO, disable button when input is none.
+
 function initializeApp() {
   initPrizeBoard();
   bindEventListeners();

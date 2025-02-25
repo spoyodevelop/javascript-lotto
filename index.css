@@ -1,3 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+  font-family: 'Roboto';
+}
 .hidden {
   display: none;
+}
+
+.roboto {
+}
+
+.lotto-header {
+  overflow: hidden;
+  background-color: #4e5ba6;
+  text-align: center;
+  display: flex;
+  height: 64px;
+}
+
+.lotto-title {
+  margin-left: 130px;
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 36px;
+  letter-spacing: 0;
+  align-self: center;
+  color: whitesmoke;
 }
