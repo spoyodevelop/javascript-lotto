@@ -62,7 +62,8 @@ function handleCheckResult() {
 
     showRevenueRate(revenueRate);
     updateWinCount(winCount);
-    elements.resultModal.classList.remove('hidden');
+
+    elements.resultModal.showModal();
   } catch (error) {
     alert(error.message);
   }
@@ -86,9 +87,9 @@ function retryGame() {
     FIVE_MATCH_WITH_BONUS: 0,
     SIX_MATCH: 0,
   });
-  elements.resultModal.classList.add('hidden');
   elements.checkUserNumberDiv.classList.add('hidden');
   elements.lottosDiv.classList.add('hidden');
+  elements.resultModal.close();
 }
 
 export { handleCheckResult, handlePurchaseLotto, retryGame };
