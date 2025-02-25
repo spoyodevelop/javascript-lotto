@@ -48,7 +48,7 @@ function showLottoList(lottos) {
 
     // 이미지 요소 추가
     const img = document.createElement('img');
-    img.src = '../../public/ticket.png'; // 로또 공 이미지
+    img.src = '../../ticket.png'; // 로또 공 이미지
     img.alt = 'Lotto Ticket';
     img.classList.add('lotto-ticket'); // 스타일 적용 가능
 
