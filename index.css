@@ -24,9 +24,6 @@ body {
 }
 
 /* 유틸리티 클래스 */
-.hidden {
-  display: none;
-}
 
 .white-font {
   color: white;
@@ -157,7 +154,8 @@ body {
 .lotto-list-container {
   display: flex;
   flex-direction: column;
-  width: 380px;
+  width: 95%;
+
   height: 200px;
   align-items: self-start;
 
@@ -167,6 +165,7 @@ body {
   overflow: scroll; /* 넘치는 부분에 스크롤 추가 */
   margin-top: 10px;
   width: 100%;
+  height: 300px;
   padding: 2px;
 }
 .lotto-ticket {
@@ -179,4 +178,19 @@ body {
   justify-content: start;
   align-items: center;
   gap: 12px;
+}
+.user-number-container {
+  justify-content: sta;
+  display: flex;
+  flex-direction: column;
+}
+.user-numbers {
+  display: flex;
+}
+.number-labels {
+  display: flex;
+  justify-content: space-between;
+}
+.hidden {
+  display: none;
 }

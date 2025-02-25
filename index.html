@@ -33,87 +33,93 @@
             <button type="button" id="purchase-lotto" class="btn">구입</button>
           </div>
         </div>
-        <div id="lottos" class="hidden">
-          <div class="lotto-list-container">
-            <p id="purchase-amount">총 n개를 구매했습니다.</p>
-            <ul id="lotto-list" class="lottos-list"></ul>
-          </div>
+        <div id="lottos" class="margin-bottom-m lotto-list-container hidden">
+          <p id="purchase-amount">총 n개를 구매했습니다.</p>
+          <ul id="lotto-list" class="lottos-list"></ul>
         </div>
 
         <div id="check-user-number" class="hidden">
-          <div>
-            <p>지난 주 당첨번호 6개와 보너스 번호 1개를 입력해주세요.</p>
-            <ul>
-              <li>
-                <label for="first-number" />
-                <input
-                  type="number"
-                  id="first-number"
-                  min="1"
-                  max="45"
-                  class="user-input"
-                />
-              </li>
-              <li>
-                <label for="second-number" />
-                <input
-                  type="number"
-                  id="second-number"
-                  min="1"
-                  max="45"
-                  class="user-input"
-                />
-              </li>
-              <li>
-                <label for="third-number" />
-                <input
-                  type="number"
-                  id="third-number"
-                  min="1"
-                  max="45"
-                  class="user-input"
-                />
-              </li>
-              <li>
-                <label for="fourth-number" />
-                <input
-                  type="number"
-                  id="fourth-number"
-                  min="1"
-                  max="45"
-                  class="user-input"
-                />
-              </li>
-              <li>
-                <label for="fifth-number" />
-                <input
-                  type="number"
-                  id="fifth-number"
-                  min="1"
-                  max="45"
-                  class="user-input"
-                />
-              </li>
-              <li>
-                <label for="sixth-number" />
-                <input
-                  type="number"
-                  id="sixth-number"
-                  min="1"
-                  max="45"
-                  class="user-input"
-                />
-              </li>
-            </ul>
-            <label for="bonus-number">보너스 번호</label>
-            <input
-              type="number"
-              id="bonus-number"
-              min="1"
-              max="45"
-              class="user-input"
-            />
+          <div class="user-number-container">
+            <p class="margin-bottom-m">
+              지난 주 당첨번호 6개와 보너스 번호 1개를 입력해주세요.
+            </p>
+            <div class="number-labels">
+              <p>당첨 번호</p>
+              <p>보너스 번호</p>
+            </div>
+            <div class="user-numbers">
+              <ul>
+                <li>
+                  <label for="first-number" />
+                  <input
+                    type="number"
+                    id="first-number"
+                    min="1"
+                    max="45"
+                    class="user-input"
+                  />
+                </li>
+                <li>
+                  <label for="second-number" />
+                  <input
+                    type="number"
+                    id="second-number"
+                    min="1"
+                    max="45"
+                    class="user-input"
+                  />
+                </li>
+                <li>
+                  <label for="third-number" />
+                  <input
+                    type="number"
+                    id="third-number"
+                    min="1"
+                    max="45"
+                    class="user-input"
+                  />
+                </li>
+                <li>
+                  <label for="fourth-number" />
+                  <input
+                    type="number"
+                    id="fourth-number"
+                    min="1"
+                    max="45"
+                    class="user-input"
+                  />
+                </li>
+                <li>
+                  <label for="fifth-number" />
+                  <input
+                    type="number"
+                    id="fifth-number"
+                    min="1"
+                    max="45"
+                    class="user-input"
+                  />
+                </li>
+                <li>
+                  <label for="sixth-number" />
+                  <input
+                    type="number"
+                    id="sixth-number"
+                    min="1"
+                    max="45"
+                    class="user-input"
+                  />
+                </li>
+              </ul>
 
+              <label for="bonus-number" />
+              <input
+                type="number"
+                id="bonus-number"
+                min="1"
+                max="45"
+                class="user-input"
+              />
+            </div>
             <button type="button" id="check-result" class="btn">
               내 결과 보기
             </button>
