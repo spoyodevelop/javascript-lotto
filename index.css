@@ -123,7 +123,7 @@ body {
 /* 입력창 */
 .user-input {
   border-radius: 4px;
-  border: 1px solid var(--lotto-greyscale-5);
+  border: 1px solid var(--lotto-greyscale-2);
   padding: 5px;
 }
 
@@ -154,17 +154,25 @@ body {
   display: flex;
   flex-direction: column;
   width: 380px;
+  height: 200px;
   align-items: self-start;
+
   margin-top: 30px;
 }
 .lottos-list {
   overflow: scroll; /* 넘치는 부분에 스크롤 추가 */
   margin-top: 10px;
+  width: 100%;
   padding: 2px;
 }
-.ticket {
-  background-image: url('./public/ticket.png');
-  background-size: cover; /* 요소 크기에 맞게 조절 */
-  background-position: center; /* 이미지 중앙 정렬 */
-  background-repeat: no-repeat; /* 반복 방지 */
+.lotto-ticket {
+  width: 34px;
+  height: 36px;
+}
+
+.lotto {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 12px;
 }

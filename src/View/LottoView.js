@@ -44,8 +44,22 @@ function showLottoList(lottos) {
   resetLottoList();
   lottos.forEach((lotto) => {
     const li = document.createElement('li');
-    li.classList.add('ticket');
-    li.textContent = lotto.numbers.join(', ');
+    li.classList.add('lotto');
+
+    // 이미지 요소 추가
+    const img = document.createElement('img');
+    img.src = '../../public/ticket.png'; // 로또 공 이미지
+    img.alt = 'Lotto Ticket';
+    img.classList.add('lotto-ticket'); // 스타일 적용 가능
+
+    // 숫자 텍스트 추가
+    const span = document.createElement('span');
+    span.textContent = lotto.numbers.join(', ');
+    span.classList.add('lotto-numbers');
+
+    // li 요소에 이미지와 숫자 추가
+    li.appendChild(img);
+    li.appendChild(span);
     elements.lottoList.appendChild(li);
   });
 }

@@ -39,39 +39,83 @@
         </div>
 
         <div id="check-user-number" class="hidden">
-          <p>지난 주 당첨번호 6개와 보너스 번호 1개를 입력해주세요.</p>
-          <ul>
-            <li>
-              <label for="first-number" />
-              <input type="number" id="first-number" min="1" max="45" />
-            </li>
-            <li>
-              <label for="second-number" />
-              <input type="number" id="second-number" min="1" max="45" />
-            </li>
-            <li>
-              <label for="third-number" />
-              <input type="number" id="third-number" min="1" max="45" />
-            </li>
-            <li>
-              <label for="fourth-number" />
-              <input type="number" id="fourth-number" min="1" max="45" />
-            </li>
-            <li>
-              <label for="fifth-number" />
-              <input type="number" id="fifth-number" min="1" max="45" />
-            </li>
-            <li>
-              <label for="sixth-number" />
-              <input type="number" id="sixth-number" min="1" max="45" />
-            </li>
-          </ul>
-          <label for="bonus-number">보너스 번호</label>
-          <input type="number" id="bonus-number" min="1" max="45" />
+          <div>
+            <p>지난 주 당첨번호 6개와 보너스 번호 1개를 입력해주세요.</p>
+            <ul>
+              <li>
+                <label for="first-number" />
+                <input
+                  type="number"
+                  id="first-number"
+                  min="1"
+                  max="45"
+                  class="user-input"
+                />
+              </li>
+              <li>
+                <label for="second-number" />
+                <input
+                  type="number"
+                  id="second-number"
+                  min="1"
+                  max="45"
+                  class="user-input"
+                />
+              </li>
+              <li>
+                <label for="third-number" />
+                <input
+                  type="number"
+                  id="third-number"
+                  min="1"
+                  max="45"
+                  class="user-input"
+                />
+              </li>
+              <li>
+                <label for="fourth-number" />
+                <input
+                  type="number"
+                  id="fourth-number"
+                  min="1"
+                  max="45"
+                  class="user-input"
+                />
+              </li>
+              <li>
+                <label for="fifth-number" />
+                <input
+                  type="number"
+                  id="fifth-number"
+                  min="1"
+                  max="45"
+                  class="user-input"
+                />
+              </li>
+              <li>
+                <label for="sixth-number" />
+                <input
+                  type="number"
+                  id="sixth-number"
+                  min="1"
+                  max="45"
+                  class="user-input"
+                />
+              </li>
+            </ul>
+            <label for="bonus-number">보너스 번호</label>
+            <input
+              type="number"
+              id="bonus-number"
+              min="1"
+              max="45"
+              class="user-input"
+            />
 
-          <button type="button" id="check-result" class="btn">
-            내 결과 보기
-          </button>
+            <button type="button" id="check-result" class="btn">
+              내 결과 보기
+            </button>
+          </div>
         </div>
       </div>
       <div id="result-modal" class="hidden">
