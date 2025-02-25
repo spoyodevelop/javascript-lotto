@@ -1,0 +1,296 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap');* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  border: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: normal;
+}
+
+
+:root {
+  --btn-primary: #4e5ba6;
+  --btn-hover: #3f4d8a;
+  --btn-active: #2f3b6d;
+  --btn-disabled: #7c88c3;
+  --btn-fallback: #465593;
+  --btn-border: rgba(151, 159, 196, 0.8);
+  --lotto-primary-20: rgba(78, 91, 166, 0.2);
+  --lotto-greyscale-1: #ffffff;
+  --lotto-greyscale-2: #fcfcfd;
+  --lotto-greyscale-3: #b4b4b4;
+  --lotto-greyscale-4: #8b8b8b;
+  --lotto-greyscale-5: #000000;
+  --lotto-greyscale-5-12: rgba(0, 0, 0, 0.12);
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--lotto-greyscale-2);
+}
+
+/* 유틸리티 클래스 */
+
+.white-font {
+  color: white;
+  padding-left: 100px;
+}
+
+/* 헤더 스타일 */
+
+.lotto-header {
+  background-color: var(--btn-primary);
+  display: flex;
+  align-items: center;
+  margin-bottom: 84px;
+  height: 64px;
+  width: 100%;
+}
+
+.margin-top-l {
+  margin-top: 40px;
+}
+
+.lotto-title {
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 36px;
+  letter-spacing: 0;
+}
+
+.lotto-caption {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 1.25px;
+}
+
+/* 레이아웃 */
+
+.lotto-layout {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
+  width: 414px;
+
+  border: 1px solid var(--lotto-greyscale-5-12);
+  border-radius: 4px;
+  background-color: var(--lotto-greyscale-1);
+}
+
+/* 푸터 */
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80px;
+  border-top: var(--btn-border) 1px solid;
+  width: 100%;
+  margin-top: 69px;
+}
+
+.margin-bottom-m {
+  margin-bottom: 25px;
+}
+
+.margin-bottom-xs {
+  margin-bottom: 6px;
+}
+
+.margin-right-m {
+  margin-right: 16px;
+}
+
+/* 버튼 스타일 */
+
+.btn {
+  background-color: var(--btn-primary);
+  padding: 6px 8px;
+  border-radius: 4px;
+  color: white;
+  width: 56px;
+  min-height: 36px;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.long {
+  width: 310px;
+}
+
+.xlong {
+  width: 380px;
+}
+
+.btn:hover {
+  background-color: var(--btn-hover);
+  transform: scale(1.05);
+}
+
+.btn:active {
+  background-color: var(--btn-active);
+  transform: scale(1.02); /* 클릭 시 효과 조정 */
+}
+
+.btn:disabled {
+  background-color: var(--btn-disabled);
+  cursor: not-allowed;
+}
+
+/* 입력창 */
+
+.user-input {
+  border-radius: 4px;
+  border: 1px solid var(--lotto-greyscale-3);
+  padding: 5px;
+  text-align: center;
+}
+
+.user-input-left-align {
+  text-align: left;
+}
+
+/* 컨테이너 */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 수직 중앙 정렬 */
+  align-items: center; /* 수평 중앙 정렬 */
+
+  text-align: center;
+}
+
+.lotto-header h1,
+.lotto-header p {
+  margin: 0;
+}
+
+.user-money-input-layout {
+  display: flex;
+  text-align: left;
+}
+
+.ask-user-money-layout {
+  display: flex;
+  flex-direction: column;
+
+  align-items: self-start;
+}
+
+.lotto-list-container {
+  display: flex;
+  flex-direction: column;
+  width: 92%;
+  min-height: 100px;
+  align-items: self-start;
+}
+
+.lottos-list {
+  margin-top: 10px;
+  width: 100%;
+  overflow: scroll;
+  max-height: 140px;
+  padding: 2px;
+}
+
+.lotto-ticket {
+  width: 34px;
+  height: 36px;
+}
+
+.lotto {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-number-container {
+  display: flex;
+  flex-direction: column;
+  width: 92%;
+}
+
+.number-details {
+  align-self: self-start;
+  margin-bottom: 16px;
+}
+
+.user-input-lotto-numbers {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.number-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.hidden {
+  display: none;
+}
+
+.short {
+  width: 34px;
+  height: 36px;
+}
+
+.user-input-numbers {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.close-button {
+  width: 14px;
+  height: 14px;
+}

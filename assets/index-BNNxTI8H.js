@@ -54,7 +54,8 @@ const elements = {
   resetButton: document.getElementById("reset-game"),
   lottoList: document.getElementById("lotto-list"),
   revenueRateResult: document.getElementById("revenue-rate-result"),
-  purchaseAmount: document.getElementById("purchase-amount")
+  purchaseAmount: document.getElementById("purchase-amount"),
+  closeButton: document.getElementById("close-button")
 };
 const lottoGameSettings = {
   lottoSize: 6,
@@ -280,7 +281,16 @@ function showLottoList(lottos) {
   resetLottoList();
   lottos.forEach((lotto) => {
     const li = document.createElement("li");
-    li.textContent = lotto.numbers.join(", ");
+    li.classList.add("lotto");
+    const img = document.createElement("img");
+    img.src = "../../ticket.png";
+    img.alt = "Lotto Ticket";
+    img.classList.add("lotto-ticket");
+    const span = document.createElement("span");
+    span.textContent = lotto.numbers.join(", ");
+    span.classList.add("lotto-numbers");
+    li.appendChild(img);
+    li.appendChild(span);
     elements.lottoList.appendChild(li);
   });
 }
@@ -293,6 +303,9 @@ function showRevenueRate(revenueRate) {
   elements.revenueRateResult.textContent = `당신의 총 수익률은 ${revenueRate.toFixed(
     1
   )}%입니다.`;
+}
+function closeResultModal() {
+  elements.resultModal.close();
 }
 function handlePurchaseLotto() {
   const inputValue = elements.userMoneyInput.value.trim();
@@ -332,7 +345,7 @@ function handleCheckResult() {
     );
     showRevenueRate(revenueRate);
     updateWinCount(winCount);
-    elements.resultModal.classList.remove("hidden");
+    elements.resultModal.showModal();
   } catch (error) {
     alert(error.message);
   }
@@ -356,14 +369,15 @@ function retryGame() {
     FIVE_MATCH_WITH_BONUS: 0,
     SIX_MATCH: 0
   });
-  elements.resultModal.classList.add("hidden");
   elements.checkUserNumberDiv.classList.add("hidden");
   elements.lottosDiv.classList.add("hidden");
+  elements.resultModal.close();
 }
 function bindEventListeners() {
   elements.purchaseLottoButton.addEventListener("click", handlePurchaseLotto);
   elements.checkResultButton.addEventListener("click", handleCheckResult);
   elements.resetButton.addEventListener("click", retryGame);
+  elements.closeButton.addEventListener("click", closeResultModal);
 }
 function initializeApp() {
   initPrizeBoard();
