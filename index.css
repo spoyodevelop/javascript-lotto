@@ -211,3 +211,7 @@ body {
   flex-direction: row;
   justify-content: space-between;
 }
+.close-button {
+  width: 14px;
+  height: 14px;
+}
