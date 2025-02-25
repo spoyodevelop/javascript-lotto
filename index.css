@@ -27,3 +27,16 @@ body {
   align-self: center;
   color: whitesmoke;
 }
+.lotto-caption {
+  align-self: center;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 1.25px;
+}
+.footer {
+  display: flex;
+  justify-content: center;
+  height: 80px;
+  border-top: rgba(151, 159, 196, 0.8) 1px solid;
+}
