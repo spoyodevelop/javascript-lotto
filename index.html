@@ -10,21 +10,32 @@
   </head>
 
   <body>
-    <div id="app">
+    <div id="app" class="container">
       <header class="lotto-header">
-        <p class="lotto-title">🎱 행운의 로또</p>
+        <p class="lotto-title white-font">🎱 행운의 로또</p>
       </header>
-      <div>
-        <p>구입할 금액을 입력해주세요.</p>
-        <div>
-          <label for="user-money">구입 금액:</label>
-          <input type="number" id="user-money" min="1000" step="1000" />
-          <button type="button" id="purchase-lotto">구입</button>
+      <div class="lotto-layout">
+        <h2 class="lotto-title margin-bottom-m">🎱 내 번호 당첨 확인 🎱</h2>
+        <div class="ask-user-money-layout">
+          <p class="margin-bottom-xs">구입할 금액을 입력해주세요.</p>
+          <div class="user-money-input-layout">
+            <label for="user-money"></label>
+            <input
+              type="number"
+              id="user-money"
+              min="1000"
+              step="1000"
+              class="user-input margin-right-m long"
+              placeholder="금액"
+            />
+            <button type="button" id="purchase-lotto" class="btn">구입</button>
+          </div>
         </div>
-
         <div id="lottos" class="hidden">
-          <p id="purchase-amount">총 n개를 구매했습니다.</p>
-          <ul id="lotto-list"></ul>
+          <div class="lotto-list-container">
+            <p id="purchase-amount">총 n개를 구매했습니다.</p>
+            <ul id="lotto-list" class="lottos-list"></ul>
+          </div>
         </div>
 
         <div id="check-user-number" class="hidden">
@@ -58,50 +69,51 @@
           <label for="bonus-number">보너스 번호</label>
           <input type="number" id="bonus-number" min="1" max="45" />
 
-          <button type="button" id="check-result">내 결과 보기</button>
+          <button type="button" id="check-result" class="btn">
+            내 결과 보기
+          </button>
         </div>
-
-        <div id="result-modal" class="hidden">
-          <h2>🏆 당첨 통계 🏆</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>일치 갯수</th>
-                <th>당첨금</th>
-                <th>당첨 갯수</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th><p>3개</p></th>
-                <th><p id="three-match-price"></p></th>
-                <th><p id="three-match-amount">n개</p></th>
-              </tr>
-              <tr>
-                <th><p>4개</p></th>
-                <th><p id="four-match-price"></p></th>
-                <th><p id="four-match-amount">n개</p></th>
-              </tr>
-              <tr>
-                <th><p>5개</p></th>
-                <th><p id="five-match-price"></p></th>
-                <th><p id="five-match-amount">n개</p></th>
-              </tr>
-              <tr>
-                <th><p>5개+보너스볼</p></th>
-                <th><p id="five-match-with-bonus-price"></p></th>
-                <th><p id="five-match-with-bonus-amount">n개</p></th>
-              </tr>
-              <tr>
-                <th><p>6개</p></th>
-                <th><p id="six-match-price"></p></th>
-                <th><p id="six-match-amount">n개</p></th>
-              </tr>
-            </tbody>
-          </table>
-          <p id="revenue-rate-result">당신의 총 수익률은 %입니다.</p>
-          <button type="button" id="reset-game">다시 시작하기</button>
-        </div>
+      </div>
+      <div id="result-modal" class="hidden">
+        <h2>🏆 당첨 통계 🏆</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>일치 갯수</th>
+              <th>당첨금</th>
+              <th>당첨 갯수</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th><p>3개</p></th>
+              <th><p id="three-match-price"></p></th>
+              <th><p id="three-match-amount">n개</p></th>
+            </tr>
+            <tr>
+              <th><p>4개</p></th>
+              <th><p id="four-match-price"></p></th>
+              <th><p id="four-match-amount">n개</p></th>
+            </tr>
+            <tr>
+              <th><p>5개</p></th>
+              <th><p id="five-match-price"></p></th>
+              <th><p id="five-match-amount">n개</p></th>
+            </tr>
+            <tr>
+              <th><p>5개+보너스볼</p></th>
+              <th><p id="five-match-with-bonus-price"></p></th>
+              <th><p id="five-match-with-bonus-amount">n개</p></th>
+            </tr>
+            <tr>
+              <th><p>6개</p></th>
+              <th><p id="six-match-price"></p></th>
+              <th><p id="six-match-amount">n개</p></th>
+            </tr>
+          </tbody>
+        </table>
+        <p id="revenue-rate-result">당신의 총 수익률은 %입니다.</p>
+        <button type="button" id="reset-game">다시 시작하기</button>
       </div>
 
       <footer class="footer">

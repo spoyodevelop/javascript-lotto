@@ -44,6 +44,7 @@ function showLottoList(lottos) {
   resetLottoList();
   lottos.forEach((lotto) => {
     const li = document.createElement('li');
+    li.classList.add('ticket');
     li.textContent = lotto.numbers.join(', ');
     elements.lottoList.appendChild(li);
   });
