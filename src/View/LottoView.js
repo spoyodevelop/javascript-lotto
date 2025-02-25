@@ -75,6 +75,9 @@ function showRevenueRate(revenueRate) {
   )}%입니다.`;
 }
 
+function closeResultModal() {
+  elements.resultModal.close();
+}
 export {
   initPrizeBoard,
   resetInputs,
@@ -82,4 +85,5 @@ export {
   showLottoList,
   resetLottoList,
   showRevenueRate,
+  closeResultModal,
 };
