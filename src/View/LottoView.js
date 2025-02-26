@@ -46,18 +46,15 @@ function showLottoList(lottos) {
     const li = document.createElement('li');
     li.classList.add('lotto');
 
-    // 이미지 요소 추가
     const img = document.createElement('img');
-    img.src = '../../ticket.png'; // 로또 공 이미지
+    img.src = '../../public/ticket.png';
     img.alt = 'Lotto Ticket';
-    img.classList.add('lotto-ticket'); // 스타일 적용 가능
+    img.classList.add('lotto-ticket');
 
-    // 숫자 텍스트 추가
     const span = document.createElement('span');
     span.textContent = lotto.numbers.join(', ');
     span.classList.add('lotto-numbers');
 
-    // li 요소에 이미지와 숫자 추가
     li.appendChild(img);
     li.appendChild(span);
     elements.lottoList.appendChild(li);
