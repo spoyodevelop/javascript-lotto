@@ -75,6 +75,7 @@ function showRevenueRate(revenueRate) {
 function closeResultModal() {
   elements.resultModal.close();
 }
+
 export {
   initPrizeBoard,
   resetInputs,

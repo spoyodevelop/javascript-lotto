@@ -28,6 +28,7 @@ function handlePurchaseLotto() {
     elements.purchaseAmount.textContent = `총 ${ticket}개를 구매하였습니다.`;
     elements.lottosDiv.classList.remove('hidden');
     elements.checkUserNumberDiv.classList.remove('hidden');
+    bindClipboardCopyEvent();
     resetInputs(['user-money']);
   } catch (error) {
     resetInputs(['user-money']);
@@ -67,6 +68,20 @@ function handleCheckResult() {
   } catch (error) {
     alert(error.message);
   }
+}
+function copyTextToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert(`로또 값 ${text}이 복사되었습니다.`);
+  });
+}
+function bindClipboardCopyEvent() {
+  const lottoNumbersElements = [...document.getElementsByClassName('lotto')];
+  console.log(lottoNumbersElements);
+  lottoNumbersElements.forEach((element) =>
+    element.addEventListener('click', () => {
+      copyTextToClipboard(element.children[1].textContent);
+    }),
+  );
 }
 function retryGame() {
   gameState.resetGameState();

@@ -10,4 +10,5 @@ export const elements = {
   revenueRateResult: document.getElementById('revenue-rate-result'),
   purchaseAmount: document.getElementById('purchase-amount'),
   closeButton: document.getElementById('close-button'),
+  generatedLottoNumbers: document.getElementById('generated-lotto-numbers'),
 };
