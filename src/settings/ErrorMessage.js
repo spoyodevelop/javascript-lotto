@@ -12,7 +12,7 @@ const ERROR_MESSAGE = Object.freeze({
   duplicatedBonusNumbers:
     '[ERROR] 보너스 번호는 중복될 수 없습니다. 다시 입력해주세요.',
   numberOutOfRange: `[ERROR] 로또 번호는 ${lottoGameSettings.minLottoNumber}-${lottoGameSettings.maxLottoNumber} 사이여야 합니다. 다시 입력해주세요.`,
-  notANote: `'[ERROR] 금액은 ${lottoGameSettings.lottoPrice.toLocaleString()} 단위로 입력하셔야 합니다. 다시 입력해주세요.'`,
+  notANote: `[ERROR] 금액은 ${lottoGameSettings.lottoPrice.toLocaleString()} 단위로 입력하셔야 합니다. 다시 입력해주세요.`,
   notEnoughMoney: `[ERROR] 최소 금액은 ${lottoGameSettings.lottoPrice.toLocaleString()}원 입니다. 다시 입력해주세요.`,
   invalidCommand: '[ERROR] 유효하지 않은 입력입니다. y/n으로 입력해주세요.',
 });
