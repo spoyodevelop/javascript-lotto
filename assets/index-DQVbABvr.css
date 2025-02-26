@@ -47,6 +47,8 @@ h6 {
 }
 
 
+/* ========== CSS Variables ========== */
+
 :root {
   --btn-primary: #4e5ba6;
   --btn-hover: #3f4d8a;
@@ -63,6 +65,8 @@ h6 {
   --lotto-greyscale-5-12: rgba(0, 0, 0, 0.12);
 }
 
+/* ========== Global Styles ========== */
+
 body {
   font-family: 'Roboto', sans-serif;
   margin: 0;
@@ -70,66 +74,15 @@ body {
   background-color: var(--lotto-greyscale-2);
 }
 
-/* 유틸리티 클래스 */
+/* ========== Utility Classes ========== */
 
 .white-font {
   color: white;
   padding-left: 100px;
 }
 
-/* 헤더 스타일 */
-
-.lotto-header {
-  background-color: var(--btn-primary);
-  display: flex;
-  align-items: center;
-  margin-bottom: 84px;
-  height: 64px;
-  width: 100%;
-}
-
 .margin-top-l {
   margin-top: 40px;
-}
-
-.lotto-title {
-  font-weight: 800;
-  font-size: 24px;
-  line-height: 36px;
-  letter-spacing: 0;
-}
-
-.lotto-caption {
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 16px;
-  letter-spacing: 1.25px;
-}
-
-/* 레이아웃 */
-
-.lotto-layout {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  flex-direction: column;
-  width: 414px;
-
-  border: 1px solid var(--lotto-greyscale-5-12);
-  border-radius: 4px;
-  background-color: var(--lotto-greyscale-1);
-}
-
-/* 푸터 */
-
-.footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80px;
-  border-top: var(--btn-border) 1px solid;
-  width: 100%;
-  margin-top: 69px;
 }
 
 .margin-bottom-m {
@@ -144,19 +97,96 @@ body {
   margin-right: 16px;
 }
 
-/* 버튼 스타일 */
+/* ========== Header ========== */
+
+.lotto-header {
+  background-color: var(--btn-primary);
+  display: flex;
+  align-items: center;
+  height: 64px;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.lotto-header h1,
+.lotto-header p {
+  margin: 0;
+}
+
+.lotto-title {
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.lotto-caption {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 1.25px;
+}
+
+/* ========== Layout Containers ========== */
+
+.lotto-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 414px;
+  border: 1px solid var(--lotto-greyscale-5-12);
+  border-radius: 4px;
+  background-color: var(--lotto-greyscale-1);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ========== Footer ========== */
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  width: 100%;
+  margin-top: 69px;
+  border-top: 1px solid var(--btn-border);
+}
+
+/* ========== Buttons ========== */
 
 .btn {
   background-color: var(--btn-primary);
-  padding: 6px 8px;
-  border-radius: 4px;
   color: white;
   width: 56px;
   min-height: 36px;
-  text-align: center;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  padding: 6px 8px;
   border: none;
+  border-radius: 4px;
+  text-align: center;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn:hover {
+  background-color: var(--btn-hover);
+  transform: scale(1.05);
+}
+
+.btn:active {
+  background-color: var(--btn-active);
+  transform: scale(1.02);
+}
+
+.btn:disabled {
+  background-color: var(--btn-disabled);
+  cursor: not-allowed;
 }
 
 .long {
@@ -167,26 +197,17 @@ body {
   width: 380px;
 }
 
-.btn:hover {
-  background-color: var(--btn-hover);
-  transform: scale(1.05);
+/*고칠것  */
+
+p#purchase-amount {
+  text-align: start;
 }
 
-.btn:active {
-  background-color: var(--btn-active);
-  transform: scale(1.02); /* 클릭 시 효과 조정 */
-}
-
-.btn:disabled {
-  background-color: var(--btn-disabled);
-  cursor: not-allowed;
-}
-
-/* 입력창 */
+/* ========== Inputs ========== */
 
 .user-input {
-  border-radius: 4px;
   border: 1px solid var(--lotto-greyscale-3);
+  border-radius: 4px;
   padding: 5px;
   text-align: center;
 }
@@ -195,19 +216,7 @@ body {
   text-align: left;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  text-align: center;
-}
-
-.lotto-header h1,
-.lotto-header p {
-  margin: 0;
-}
+/* ========== Form & List Layouts ========== */
 
 .user-money-input-layout {
   display: flex;
@@ -217,27 +226,35 @@ body {
 .ask-user-money-layout {
   display: flex;
   flex-direction: column;
-
-  align-items: self-start;
+  align-items: flex-start;
 }
 
-.lotto-list-container {
+.user-input-numbers {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.lotto-list-container,
+.user-number-container {
   display: flex;
   flex-direction: column;
   width: 92%;
-  min-height: 100px;
-  align-items: self-start;
 }
 
 .lottos-list {
   margin-top: 10px;
   width: 100%;
-  overflow-y: scroll;
-  max-height: 140px;
   padding: 2px;
+  max-height: 140px;
+  overflow-y: scroll;
 }
 
-.lotto-ticket {
+/* ========== Lotto Ticket & Numbers ========== */
+
+.lotto-ticket,
+.short {
   width: 34px;
   height: 36px;
 }
@@ -247,34 +264,16 @@ body {
   font-size: 20px;
   line-height: 24px;
   letter-spacing: 0.15px;
-  margin-bottom: 20px;
-  margin-top: 40px;
-}
-
-.result-container {
-}
-
-.lotto {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  gap: 12px;
-}
-
-.user-number-container {
-  display: flex;
-  flex-direction: column;
-  width: 92%;
+  margin: 40px 0 20px;
 }
 
 .number-details {
-  align-self: self-start;
+  align-self: flex-start;
   margin-bottom: 16px;
 }
 
 .user-input-lotto-numbers {
   display: flex;
-  flex-direction: row;
   gap: 8px;
 }
 
@@ -284,30 +283,32 @@ body {
   margin-bottom: 14px;
 }
 
-.hidden {
-  display: none;
-}
+/* ========== Lotto Item ========== */
 
-.short {
-  width: 34px;
-  height: 36px;
-}
-
-.user-input-numbers {
-  margin-bottom: 20px;
+.lotto {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
+
+.lotto:hover {
+  background-color: var(--lotto-primary-20);
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* ========== Modal & Table ========== */
 
 .close-button {
   position: absolute;
   top: 16px;
   right: 16px;
-  background: none;
-  border: none;
   width: 14px;
   height: 14px;
+  background: none;
+  border: none;
 }
 
 .result-modal {
@@ -327,45 +328,47 @@ body {
   margin-bottom: 40px;
 }
 
-.result-detail-title th {
-  font-weight: 600;
-  size: 15px;
+.result-detail-title th,
+.result-details th {
+  font-size: 15px;
   line-height: 24px;
   letter-spacing: 0.5px;
   text-align: center;
+}
+
+.result-detail-title th {
+  font-weight: 600;
 }
 
 .result-details th {
   padding: 8px;
   font-weight: 400;
-  size: 15px;
-  line-height: 24px;
-  letter-spacing: 0.5px;
-  text-align: center;
 }
 
-.result-detail-title tr {
-  border-bottom: 1px solid var(--lotto-greyscale-5-12);
-}
-
+.result-detail-title tr,
 .result-details tr {
   border-bottom: 1px solid var(--lotto-greyscale-5-12);
 }
 
 .revenue-rate-result {
   font-weight: 700;
-  size: 15px;
+  font-size: 15px;
   line-height: 24px;
   letter-spacing: 0.5px;
   text-align: center;
   margin-bottom: 40px;
 }
 
+/* ========== Miscellaneous ========== */
+
 dialog {
   border: none;
 }
 
 table {
-  /* 이게 서로 문제를 일으켜. 어떻게하는 게 좋을까? */
   border-spacing: 10px;
+}
+
+.hidden {
+  display: none;
 }

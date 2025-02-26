@@ -55,7 +55,9 @@ const elements = {
   lottoList: document.getElementById("lotto-list"),
   revenueRateResult: document.getElementById("revenue-rate-result"),
   purchaseAmount: document.getElementById("purchase-amount"),
-  closeButton: document.getElementById("close-button")
+  closeButton: document.getElementById("close-button"),
+  generatedLottoNumbers: document.getElementById("generated-lotto-numbers"),
+  firstNumber: document.getElementById("first-number")
 };
 const lottoGameSettings = {
   lottoSize: 6,
@@ -74,6 +76,7 @@ const lottoResults = {
   }
 };
 const ERROR_MESSAGE = Object.freeze({
+  emptyInput: "[ERROR] 빈 문자는 입력할수 없어요. 다시 입력해주세요.",
   notANumber: "[ERROR] 문자는 입력할 수 없습니다. 다시 입력해주세요.",
   notInteger: "[ERROR] 정수가 아닌 수는 입력할 수 없습니다. 다시 입력해주세요.",
   notPositive: "[ERROR] 양수가 아닌 수는 입력할 수 없습니다. 다시 입력해주세요.",
@@ -81,7 +84,7 @@ const ERROR_MESSAGE = Object.freeze({
   duplicatedNumbers: "[ERROR] 로또 번호는 중복될 수 없습니다. 다시 입력해주세요.",
   duplicatedBonusNumbers: "[ERROR] 보너스 번호는 중복될 수 없습니다. 다시 입력해주세요.",
   numberOutOfRange: `[ERROR] 로또 번호는 ${lottoGameSettings.minLottoNumber}-${lottoGameSettings.maxLottoNumber} 사이여야 합니다. 다시 입력해주세요.`,
-  notANote: `'[ERROR] 금액은 ${lottoGameSettings.lottoPrice.toLocaleString()} 단위로 입력하셔야 합니다. 다시 입력해주세요.'`,
+  notANote: `[ERROR] 금액은 ${lottoGameSettings.lottoPrice.toLocaleString()} 단위로 입력하셔야 합니다. 다시 입력해주세요.`,
   notEnoughMoney: `[ERROR] 최소 금액은 ${lottoGameSettings.lottoPrice.toLocaleString()}원 입니다. 다시 입력해주세요.`,
   invalidCommand: "[ERROR] 유효하지 않은 입력입니다. y/n으로 입력해주세요."
 });
@@ -96,6 +99,7 @@ function validateNumber(input) {
   return _isPositive(_isInteger(_isNumber(input)));
 }
 function _isNumber(input) {
+  if (input.length === 0) throw new Error(ERROR_MESSAGE.emptyInput);
   if (Number.isNaN(Number(input))) throw new Error(ERROR_MESSAGE.notANumber);
   return Number(input);
 }
@@ -317,10 +321,12 @@ function handlePurchaseLotto() {
     elements.purchaseAmount.textContent = `총 ${ticket}개를 구매하였습니다.`;
     elements.lottosDiv.classList.remove("hidden");
     elements.checkUserNumberDiv.classList.remove("hidden");
+    bindClipboardCopyEvent();
+    showToast(`총 ${ticket}개를 구매하였습니다.`, "success");
     resetInputs(["user-money"]);
   } catch (error) {
+    showToast(error.message);
     resetInputs(["user-money"]);
-    alert(error.message);
   }
 }
 function handleCheckResult() {
@@ -345,10 +351,25 @@ function handleCheckResult() {
     );
     showRevenueRate(revenueRate);
     updateWinCount(winCount);
+    showToast("총 수익률을 계산하여 완료하였습니다.", "success");
     elements.resultModal.showModal();
   } catch (error) {
-    alert(error.message);
+    showToast(error.message);
   }
+}
+function copyTextToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast(`로또 값 ${text}이 클립보드에 복사되었습니다.`, "success");
+  });
+}
+function bindClipboardCopyEvent() {
+  const lottoNumbersElements = [...document.getElementsByClassName("lotto")];
+  console.log(lottoNumbersElements);
+  lottoNumbersElements.forEach(
+    (element) => element.addEventListener("click", () => {
+      copyTextToClipboard(element.children[1].textContent);
+    })
+  );
 }
 function retryGame() {
   gameState.resetGameState();
@@ -378,6 +399,7 @@ function bindEventListeners() {
   elements.checkResultButton.addEventListener("click", handleCheckResult);
   elements.resetButton.addEventListener("click", retryGame);
   elements.closeButton.addEventListener("click", closeResultModal);
+  elements.firstNumber.addEventListener("input", handleNumberInput);
 }
 function bindEnterKeyDownListener() {
   [
@@ -395,6 +417,78 @@ function bindEnterKeyDownListener() {
   });
   elements.userMoneyInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") handlePurchaseLotto();
+  });
+}
+function handleNumberInput() {
+  const input = this.value;
+  const numbers = input.trim().split(",").map((num) => num.trim()).filter((num) => num !== "").slice(0, 6);
+  if (numbers.length !== 6) return;
+  const ids = [
+    "first-number",
+    "second-number",
+    "third-number",
+    "fourth-number",
+    "fifth-number",
+    "sixth-number"
+  ];
+  ids.forEach((id, index) => {
+    document.getElementById(id).value = numbers[index] || "";
+  });
+}
+const toastStyle = `
+  .toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .toast {
+    padding: 12px 20px;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .toast.error { background-color: #d9534f; }
+  .toast.warning { background-color: #f0ad4e; }
+  .toast.info { background-color: #5bc0de; }
+  .toast.success { background-color: #5cb85c; }
+`;
+const styleTag = document.createElement("style");
+styleTag.innerHTML = toastStyle;
+document.head.appendChild(styleTag);
+let toastContainer = document.querySelector(".toast-container");
+if (!toastContainer) {
+  toastContainer = document.createElement("div");
+  toastContainer.className = "toast-container";
+  document.body.appendChild(toastContainer);
+}
+function showToast(message, type = "error", duration = 3e3) {
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  if (type == "error") message = message.replace("[ERROR]", "");
+  toast.innerHTML = message;
+  toastContainer.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 100);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+  toast.addEventListener("click", () => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
   });
 }
 function initializeApp() {
