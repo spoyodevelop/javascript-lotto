@@ -234,7 +234,7 @@ body {
 .lottos-list {
   margin-top: 10px;
   width: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
   max-height: 140px;
   padding: 2px;
 }
