@@ -4,6 +4,7 @@ export default function validateNumber(input) {
   return _isPositive(_isInteger(_isNumber(input)));
 }
 export function _isNumber(input) {
+  if (input.length === 0) throw new Error(ERROR_MESSAGE.emptyInput);
   if (Number.isNaN(Number(input))) throw new Error(ERROR_MESSAGE.notANumber);
   return Number(input);
 }
