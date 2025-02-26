@@ -47,7 +47,7 @@ function showLottoList(lottos) {
     li.classList.add('lotto');
 
     const img = document.createElement('img');
-    img.src = '../../public/ticket.png';
+    img.src = './ticket.png';
     img.alt = 'Lotto Ticket';
     img.classList.add('lotto-ticket');
 
