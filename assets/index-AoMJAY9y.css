@@ -195,13 +195,11 @@ body {
   text-align: left;
 }
 
-/* 컨테이너 */
-
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* 수직 중앙 정렬 */
-  align-items: center; /* 수평 중앙 정렬 */
+  justify-content: center;
+  align-items: center;
 
   text-align: center;
 }
@@ -242,6 +240,18 @@ body {
 .lotto-ticket {
   width: 34px;
   height: 36px;
+}
+
+.lotto-subtitle {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+  margin-bottom: 20px;
+  margin-top: 40px;
+}
+
+.result-container {
 }
 
 .lotto {
@@ -291,6 +301,11 @@ body {
 }
 
 .close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
   width: 14px;
   height: 14px;
 }
@@ -300,4 +315,57 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 350px;
+  height: 500px;
+  border: 1px solid var(--lotto-greyscale-5-12);
+  border-radius: 4px;
+  background-color: var(--lotto-greyscale-1);
+}
+
+.result-table {
+  width: 319px;
+  margin-bottom: 40px;
+}
+
+.result-detail-title th {
+  font-weight: 600;
+  size: 15px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.result-details th {
+  padding: 8px;
+  font-weight: 400;
+  size: 15px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.result-detail-title tr {
+  border-bottom: 1px solid var(--lotto-greyscale-5-12);
+}
+
+.result-details tr {
+  border-bottom: 1px solid var(--lotto-greyscale-5-12);
+}
+
+.revenue-rate-result {
+  font-weight: 700;
+  size: 15px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+dialog {
+  border: none;
+}
+
+table {
+  /* 이게 서로 문제를 일으켜. 어떻게하는 게 좋을까? */
+  border-spacing: 10px;
 }
