@@ -11,4 +11,5 @@ export const elements = {
   purchaseAmount: document.getElementById('purchase-amount'),
   closeButton: document.getElementById('close-button'),
   generatedLottoNumbers: document.getElementById('generated-lotto-numbers'),
+  firstNumber: document.getElementById('first-number'),
 };

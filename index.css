@@ -287,7 +287,6 @@ dialog {
 }
 
 table {
-  /* 이게 서로 문제를 일으켜. 어떻게하는 게 좋을까? */
   border-spacing: 10px;
 }
 .lotto:hover {
