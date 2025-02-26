@@ -17,6 +17,7 @@ import {
   updateWinCount,
   resetLottoList,
 } from '../View/LottoView.js';
+import { showToast } from '../step2-index.js';
 
 function handlePurchaseLotto() {
   const inputValue = elements.userMoneyInput.value.trim();
@@ -29,10 +30,11 @@ function handlePurchaseLotto() {
     elements.lottosDiv.classList.remove('hidden');
     elements.checkUserNumberDiv.classList.remove('hidden');
     bindClipboardCopyEvent();
+    showToast(`총 ${ticket}개를 구매하였습니다.`, 'success');
     resetInputs(['user-money']);
   } catch (error) {
+    showToast(error.message);
     resetInputs(['user-money']);
-    alert(error.message);
   }
 }
 
@@ -63,15 +65,15 @@ function handleCheckResult() {
 
     showRevenueRate(revenueRate);
     updateWinCount(winCount);
-
+    showToast('총 수익률을 계산하여 완료하였습니다.', 'success');
     elements.resultModal.showModal();
   } catch (error) {
-    alert(error.message);
+    showToast(error.message);
   }
 }
 function copyTextToClipboard(text) {
   navigator.clipboard.writeText(text).then(() => {
-    alert(`로또 값 ${text}이 복사되었습니다.`);
+    showToast(`로또 값 ${text}이 클립보드에 복사되었습니다.`, 'success');
   });
 }
 function bindClipboardCopyEvent() {
