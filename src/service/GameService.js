@@ -107,6 +107,7 @@ function retryGame() {
   elements.checkUserNumberDiv.classList.add('hidden');
   elements.lottosDiv.classList.add('hidden');
   elements.resultModal.close();
+  showToast('게임을 다시 하시겠습니까?', 'success');
 }
 
 export { handleCheckResult, handlePurchaseLotto, retryGame };
