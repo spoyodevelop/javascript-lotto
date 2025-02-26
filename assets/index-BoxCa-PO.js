@@ -379,8 +379,27 @@ function bindEventListeners() {
   elements.resetButton.addEventListener("click", retryGame);
   elements.closeButton.addEventListener("click", closeResultModal);
 }
+function bindEnterKeyDownListener() {
+  [
+    "first-number",
+    "second-number",
+    "third-number",
+    "fourth-number",
+    "fifth-number",
+    "sixth-number",
+    "bonus-number"
+  ].forEach((id) => {
+    document.getElementById(id).addEventListener("keydown", (e) => {
+      if (e.key === "Enter") setTimeout(handleCheckResult, 50);
+    });
+  });
+  elements.userMoneyInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") handlePurchaseLotto();
+  });
+}
 function initializeApp() {
   initPrizeBoard();
   bindEventListeners();
+  bindEnterKeyDownListener();
 }
 document.addEventListener("DOMContentLoaded", initializeApp);
