@@ -50,7 +50,7 @@ body {
   align-items: center;
   height: 64px;
   width: 100%;
-  margin-bottom: 84px;
+  margin-bottom: 40px;
 }
 .lotto-header h1,
 .lotto-header p {
@@ -130,6 +130,10 @@ body {
   width: 380px;
 }
 
+/*고칠것  */
+p#purchase-amount {
+  text-align: start;
+}
 /* ========== Inputs ========== */
 .user-input {
   border: 1px solid var(--lotto-greyscale-3);
