@@ -283,20 +283,35 @@ function updateWinCount(winCount) {
 }
 function showLottoList(lottos) {
   resetLottoList();
-  lottos.forEach((lotto) => {
-    const li = document.createElement("li");
-    li.classList.add("lotto");
-    const img = document.createElement("img");
-    img.src = "./ticket.png";
-    img.alt = "Lotto Ticket";
-    img.classList.add("lotto-ticket");
-    const span = document.createElement("span");
-    span.textContent = lotto.numbers.join(", ");
-    span.classList.add("lotto-numbers");
-    li.appendChild(img);
-    li.appendChild(span);
-    elements.lottoList.appendChild(li);
+  const totalItems = lottos.length;
+  const visibleItems = 100;
+  let start = 0;
+  function renderItems() {
+    const fragment = document.createDocumentFragment();
+    for (let i = start; i < Math.min(start + visibleItems, totalItems); i++) {
+      const lotto = lottos[i];
+      const li = document.createElement("li");
+      li.classList.add("lotto");
+      const img = document.createElement("img");
+      img.src = "./ticket.png";
+      img.alt = "Lotto Ticket";
+      img.classList.add("lotto-ticket");
+      const span = document.createElement("span");
+      span.textContent = lotto.numbers.join(", ");
+      span.classList.add("lotto-numbers");
+      li.appendChild(img);
+      li.appendChild(span);
+      fragment.appendChild(li);
+    }
+    elements.lottoList.appendChild(fragment);
+  }
+  elements.lottoList.addEventListener("scroll", () => {
+    if (elements.lottoList.scrollTop + elements.lottoList.clientHeight >= elements.lottoList.scrollHeight) {
+      start += visibleItems;
+      if (start < totalItems) renderItems();
+    }
   });
+  renderItems();
 }
 function resetLottoList() {
   while (elements.lottoList.firstChild) {
@@ -310,6 +325,30 @@ function showRevenueRate(revenueRate) {
 }
 function closeResultModal() {
   elements.resultModal.close();
+}
+function showToast(message, type = "error", duration = 3e3) {
+  let toastContainer = document.querySelector(".toast-container");
+  if (!toastContainer) {
+    toastContainer = document.createElement("div");
+    toastContainer.className = "toast-container";
+    document.body.appendChild(toastContainer);
+  }
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  if (type == "error") message = message.replace("[ERROR]", "");
+  toast.innerHTML = message;
+  toastContainer.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 100);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+  toast.addEventListener("click", () => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  });
 }
 function handlePurchaseLotto() {
   const inputValue = elements.userMoneyInput.value.trim();
@@ -364,7 +403,6 @@ function copyTextToClipboard(text) {
 }
 function bindClipboardCopyEvent() {
   const lottoNumbersElements = [...document.getElementsByClassName("lotto")];
-  console.log(lottoNumbersElements);
   lottoNumbersElements.forEach(
     (element) => element.addEventListener("click", () => {
       copyTextToClipboard(element.children[1].textContent);
@@ -395,6 +433,22 @@ function retryGame() {
   elements.resultModal.close();
   showToast("게임을 다시 하시겠습니까?", "success");
 }
+function handleNumberInput() {
+  const input = this.value;
+  const numbers = input.trim().split(",").map((num) => num.trim()).filter((num) => num !== "").slice(0, 6);
+  if (numbers.length !== 6) return;
+  const ids = [
+    "first-number",
+    "second-number",
+    "third-number",
+    "fourth-number",
+    "fifth-number",
+    "sixth-number"
+  ];
+  ids.forEach((id, index) => {
+    document.getElementById(id).value = numbers[index] || "";
+  });
+}
 function bindEventListeners() {
   elements.purchaseLottoButton.addEventListener("click", handlePurchaseLotto);
   elements.checkResultButton.addEventListener("click", handleCheckResult);
@@ -418,78 +472,6 @@ function bindEnterKeyDownListener() {
   });
   elements.userMoneyInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") handlePurchaseLotto();
-  });
-}
-function handleNumberInput() {
-  const input = this.value;
-  const numbers = input.trim().split(",").map((num) => num.trim()).filter((num) => num !== "").slice(0, 6);
-  if (numbers.length !== 6) return;
-  const ids = [
-    "first-number",
-    "second-number",
-    "third-number",
-    "fourth-number",
-    "fifth-number",
-    "sixth-number"
-  ];
-  ids.forEach((id, index) => {
-    document.getElementById(id).value = numbers[index] || "";
-  });
-}
-const toastStyle = `
-  .toast-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .toast {
-    padding: 12px 20px;
-    color: #fff;
-    font-size: 14px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    transform: translateX(100%);
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-  }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  .toast.error { background-color: #d9534f; }
-  .toast.warning { background-color: #f0ad4e; }
-  .toast.info { background-color: #5bc0de; }
-  .toast.success { background-color: #5cb85c; }
-`;
-const styleTag = document.createElement("style");
-styleTag.innerHTML = toastStyle;
-document.head.appendChild(styleTag);
-let toastContainer = document.querySelector(".toast-container");
-if (!toastContainer) {
-  toastContainer = document.createElement("div");
-  toastContainer.className = "toast-container";
-  document.body.appendChild(toastContainer);
-}
-function showToast(message, type = "error", duration = 3e3) {
-  const toast = document.createElement("div");
-  toast.className = `toast ${type}`;
-  if (type == "error") message = message.replace("[ERROR]", "");
-  toast.innerHTML = message;
-  toastContainer.appendChild(toast);
-  setTimeout(() => {
-    toast.classList.add("show");
-  }, 100);
-  setTimeout(() => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 300);
-  }, duration);
-  toast.addEventListener("click", () => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 300);
   });
 }
 function initializeApp() {
