@@ -42,24 +42,49 @@ function updateWinCount(winCount) {
 }
 function showLottoList(lottos) {
   resetLottoList();
-  lottos.forEach((lotto) => {
-    const li = document.createElement('li');
-    li.classList.add('lotto');
 
-    const img = document.createElement('img');
-    img.src = './ticket.png';
-    img.alt = 'Lotto Ticket';
-    img.classList.add('lotto-ticket');
+  const totalItems = lottos.length;
+  const visibleItems = 100;
+  let start = 0;
 
-    const span = document.createElement('span');
-    span.textContent = lotto.numbers.join(', ');
-    span.classList.add('lotto-numbers');
+  function renderItems() {
+    const fragment = document.createDocumentFragment();
 
-    li.appendChild(img);
-    li.appendChild(span);
-    elements.lottoList.appendChild(li);
+    for (let i = start; i < Math.min(start + visibleItems, totalItems); i++) {
+      const lotto = lottos[i];
+      const li = document.createElement('li');
+      li.classList.add('lotto');
+
+      const img = document.createElement('img');
+      img.src = './ticket.png';
+      img.alt = 'Lotto Ticket';
+      img.classList.add('lotto-ticket');
+
+      const span = document.createElement('span');
+      span.textContent = lotto.numbers.join(', ');
+      span.classList.add('lotto-numbers');
+
+      li.appendChild(img);
+      li.appendChild(span);
+      fragment.appendChild(li);
+    }
+
+    elements.lottoList.appendChild(fragment);
+  }
+
+  elements.lottoList.addEventListener('scroll', () => {
+    if (
+      elements.lottoList.scrollTop + elements.lottoList.clientHeight >=
+      elements.lottoList.scrollHeight
+    ) {
+      start += visibleItems;
+      if (start < totalItems) renderItems();
+    }
   });
+
+  renderItems();
 }
+
 function resetLottoList() {
   while (elements.lottoList.firstChild) {
     elements.lottoList.removeChild(elements.lottoList.firstChild);
