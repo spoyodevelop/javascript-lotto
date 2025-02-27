@@ -78,7 +78,6 @@ function copyTextToClipboard(text) {
 }
 function bindClipboardCopyEvent() {
   const lottoNumbersElements = [...document.getElementsByClassName('lotto')];
-  console.log(lottoNumbersElements);
   lottoNumbersElements.forEach((element) =>
     element.addEventListener('click', () => {
       copyTextToClipboard(element.children[1].textContent);
