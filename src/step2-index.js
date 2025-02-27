@@ -2,6 +2,7 @@ import { elements } from './View/elements.js';
 import {
   handleCheckResult,
   handlePurchaseLotto,
+  handleNumberInput,
   retryGame,
 } from './service/GameService.js';
 import { initPrizeBoard, closeResultModal } from './View/LottoView.js';
@@ -23,108 +24,21 @@ function bindEnterKeyDownListener() {
     'sixth-number',
     'bonus-number',
   ].forEach((id) => {
+    // 음..
+    // 일단, enter를 누르면 handleCheckResult를 불러옵니다.
+    // 그런데, enter를 누르자 마자 dialog가 popup이 되고,
+    // 그리고 '다시 시도하기' 버튼에 focus가 되있는 것이 동시에 눌려
+    // 그냥 enter를 누르면 두개 동시에 실행이 되버립니다.
+    // form등을 쓰면 해결이 되겠지만
+    // 지금 사용용도로는 꼭 적절치는 않다고 생각되어,
+    // 50ms 이후에 handleCheckResult를 실행되게끔 만들었습니다.
+
     document.getElementById(id).addEventListener('keydown', (e) => {
       if (e.key === 'Enter') setTimeout(handleCheckResult, 50);
     });
   });
   elements.userMoneyInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') handlePurchaseLotto();
-  });
-}
-
-function handleNumberInput() {
-  const input = this.value;
-
-  const numbers = input
-    .trim()
-    .split(',')
-    .map((num) => num.trim())
-    .filter((num) => num !== '')
-    .slice(0, 6);
-  if (numbers.length !== 6) return;
-  const ids = [
-    'first-number',
-    'second-number',
-    'third-number',
-    'fourth-number',
-    'fifth-number',
-    'sixth-number',
-  ];
-
-  ids.forEach((id, index) => {
-    document.getElementById(id).value = numbers[index] || '';
-  });
-}
-
-// CSS 스타일 추가
-const toastStyle = `
-  .toast-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .toast {
-    padding: 12px 20px;
-    color: #fff;
-    font-size: 14px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    transform: translateX(100%);
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-  }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  .toast.error { background-color: #d9534f; }
-  .toast.warning { background-color: #f0ad4e; }
-  .toast.info { background-color: #5bc0de; }
-  .toast.success { background-color: #5cb85c; }
-`;
-
-// 스타일 추가
-const styleTag = document.createElement('style');
-styleTag.innerHTML = toastStyle;
-document.head.appendChild(styleTag);
-
-// 토스트 컨테이너 생성 (최초 1회)
-let toastContainer = document.querySelector('.toast-container');
-if (!toastContainer) {
-  toastContainer = document.createElement('div');
-  toastContainer.className = 'toast-container';
-  document.body.appendChild(toastContainer);
-}
-
-// 토스트 팝업 함수
-export function showToast(message, type = 'error', duration = 3000) {
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  if (type == 'error') message = message.replace('[ERROR]', '');
-
-  toast.innerHTML = message;
-
-  toastContainer.appendChild(toast);
-
-  // 애니메이션 적용
-  setTimeout(() => {
-    toast.classList.add('show');
-  }, 100);
-
-  // 자동 제거
-  setTimeout(() => {
-    toast.classList.remove('show');
-    setTimeout(() => toast.remove(), 300);
-  }, duration);
-
-  // 클릭 시 즉시 제거
-  toast.addEventListener('click', () => {
-    toast.classList.remove('show');
-    setTimeout(() => toast.remove(), 300);
   });
 }
 

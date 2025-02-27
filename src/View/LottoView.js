@@ -76,30 +76,6 @@ function closeResultModal() {
   elements.resultModal.close();
 }
 
-function handleNumberInput() {
-  const input = this.value;
-
-  const numbers = input
-    .trim()
-    .split(',')
-    .map((num) => num.trim())
-    .filter((num) => num !== '')
-    .slice(0, 6);
-  if (numbers.length !== 6) return;
-  const ids = [
-    'first-number',
-    'second-number',
-    'third-number',
-    'fourth-number',
-    'fifth-number',
-    'sixth-number',
-  ];
-
-  ids.forEach((id, index) => {
-    document.getElementById(id).value = numbers[index] || '';
-  });
-}
-
 export {
   initPrizeBoard,
   resetInputs,
@@ -108,5 +84,4 @@ export {
   resetLottoList,
   showRevenueRate,
   closeResultModal,
-  handleNumberInput,
 };

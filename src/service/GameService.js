@@ -17,7 +17,7 @@ import {
   updateWinCount,
   resetLottoList,
 } from '../View/LottoView.js';
-import { showToast } from '../step2-index.js';
+import showToast from '../View/ToastView.js';
 
 function handlePurchaseLotto() {
   const inputValue = elements.userMoneyInput.value.trim();
@@ -52,7 +52,7 @@ function handleCheckResult() {
     const bonusNumber = document.getElementById('bonus-number').value;
 
     const userLotto = new Lotto(userNumbers);
-    // 음.. 조금 고민해 보고 리셋 할지 결정하자.
+    // 혹여나, 리셋하고 싶으시면, 이 주석을 풀기 바랍니다.
     // resetInputs([...inputIds, 'bonus-number']);
 
     const parsedLotto = validateBonusNumber(userLotto, bonusNumber);
@@ -109,5 +109,27 @@ function retryGame() {
   elements.resultModal.close();
   showToast('게임을 다시 하시겠습니까?', 'success');
 }
+function handleNumberInput() {
+  const input = this.value;
 
-export { handleCheckResult, handlePurchaseLotto, retryGame };
+  const numbers = input
+    .trim()
+    .split(',')
+    .map((num) => num.trim())
+    .filter((num) => num !== '')
+    .slice(0, 6);
+  if (numbers.length !== 6) return;
+  const ids = [
+    'first-number',
+    'second-number',
+    'third-number',
+    'fourth-number',
+    'fifth-number',
+    'sixth-number',
+  ];
+
+  ids.forEach((id, index) => {
+    document.getElementById(id).value = numbers[index] || '';
+  });
+}
+export { handleCheckResult, handlePurchaseLotto, retryGame, handleNumberInput };
