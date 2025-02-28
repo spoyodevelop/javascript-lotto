@@ -72,7 +72,16 @@ function showLottoList(lottos) {
     elements.lottoList.appendChild(fragment);
   }
 
-  elements.lottoList.addEventListener('scroll', () => {
+  // 기존에 등록된 스크롤 이벤트 리스너가 있다면 제거합니다.
+  if (elements.lottoList.lottoScrollHandler) {
+    elements.lottoList.removeEventListener(
+      'scroll',
+      elements.lottoList.lottoScrollHandler,
+    );
+  }
+
+  // 새로운 스크롤 이벤트 핸들러를 정의합니다.
+  const lottoScrollHandler = () => {
     if (
       elements.lottoList.scrollTop + elements.lottoList.clientHeight >=
       elements.lottoList.scrollHeight
@@ -80,12 +89,17 @@ function showLottoList(lottos) {
       start += visibleItems;
       if (start < totalItems) renderItems();
     }
-  });
+  };
+
+  // 핸들러 참조를 저장해두면 이후 다시 호출 시 제거할 수 있습니다.
+  elements.lottoList.lottoScrollHandler = lottoScrollHandler;
+  elements.lottoList.addEventListener('scroll', lottoScrollHandler);
 
   renderItems();
 }
 
 function resetLottoList() {
+  elements.lottoList.scrollTop = 0;
   while (elements.lottoList.firstChild) {
     elements.lottoList.removeChild(elements.lottoList.firstChild);
   }
