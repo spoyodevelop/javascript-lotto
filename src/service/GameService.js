@@ -1,14 +1,6 @@
 import Lotto from '../model/Lotto.js';
 import gameState from '../state/state.js';
 import { elements } from '../View/elements.js';
-import { lottoResults } from '../settings/systemSettings.js';
-import makeLotto from './LottoService.js';
-import {
-  calculatePrize,
-  calculateRevenueRate,
-  calculateWins,
-} from './CalculatorService.js';
-import validateLottoPurchase from '../Validation/validateLottoPurchase.js';
 import validateBonusNumber from '../Validation/validateBonusNumber.js';
 import {
   showLottoList,
@@ -16,9 +8,14 @@ import {
   showRevenueRate,
   updateWinCount,
   resetLottoList,
+  updatePurchaseUI,
+  getUserNumbers,
+  resetUI,
 } from '../View/LottoView.js';
 import showToast from '../View/ToastView.js';
-import { INPUT_IDS, HIDDEN_CLASS } from '../settings/webSettings.js';
+import { INPUT_IDS } from '../settings/webSettings.js';
+import { processLottoPurchase, calculateLottos } from '../domain/GameLogic.js';
+
 function handlePurchaseLotto() {
   const inputValue = elements.userMoneyInput.value.trim();
   try {
@@ -30,35 +27,7 @@ function handlePurchaseLotto() {
     resetInputs(['user-money']);
   }
 }
-function processLottoPurchase(inputValue) {
-  const ticket = validateLottoPurchase(inputValue);
-  gameState.setPurchasePrice(+inputValue);
-  gameState.setLottos(makeLotto(ticket, 'web'));
-  return ticket;
-}
-function updatePurchaseUI(ticket) {
-  showLottoList(gameState.lottos);
-  elements.purchaseAmount.textContent = `총 ${ticket}개를 구매하였습니다.`;
-  elements.lottosDiv.classList.remove(HIDDEN_CLASS);
-  elements.checkUserNumberDiv.classList.remove(HIDDEN_CLASS);
-  bindClipboardCopyEvent();
-  showToast(`총 ${ticket}개를 구매하였습니다.`, 'success');
-  elements.purchaseLottoButton.disabled = true;
-  elements.userMoneyInput.disabled = true;
-  resetInputs(['user-money']);
-}
-function getUserNumbers() {
-  const userNumbers = INPUT_IDS.map((id) => document.getElementById(id).value);
-  const bonusNumber = document.getElementById('bonus-number').value;
-  return { userNumbers, bonusNumber };
-}
 
-function calculateLottos(parsedLotto) {
-  const winCount = calculateWins(gameState.lottos, parsedLotto);
-  const totalPrize = calculatePrize(winCount, lottoResults.prizeMoney);
-  const revenueRate = calculateRevenueRate(totalPrize, gameState.purchasePrice);
-  return { winCount, revenueRate };
-}
 function handleCheckResult() {
   try {
     const { userNumbers, bonusNumber } = getUserNumbers();
@@ -89,13 +58,6 @@ function bindClipboardCopyEvent() {
   });
 }
 
-function resetUI() {
-  elements.checkUserNumberDiv.classList.add(HIDDEN_CLASS);
-  elements.lottosDiv.classList.add(HIDDEN_CLASS);
-  elements.resultModal.close();
-  elements.purchaseLottoButton.disabled = false;
-  elements.userMoneyInput.disabled = false;
-}
 function retryGame() {
   gameState.resetGameState();
   resetInputs([...INPUT_IDS, 'bonus-number']);
@@ -127,4 +89,11 @@ function handleNumberInput(event) {
     document.getElementById(id).value = numbers[index] || '';
   });
 }
-export { handleCheckResult, handlePurchaseLotto, retryGame, handleNumberInput };
+
+export {
+  handleCheckResult,
+  handlePurchaseLotto,
+  retryGame,
+  handleNumberInput,
+  bindClipboardCopyEvent,
+};
