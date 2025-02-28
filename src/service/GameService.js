@@ -18,7 +18,7 @@ import {
   resetLottoList,
 } from '../View/LottoView.js';
 import showToast from '../View/ToastView.js';
-
+import { INPUT_IDS, HIDDEN_CLASS } from '../settings/webSettings.js';
 function handlePurchaseLotto() {
   const inputValue = elements.userMoneyInput.value.trim();
   try {
@@ -39,23 +39,15 @@ function processLottoPurchase(inputValue) {
 function updatePurchaseUI(ticket) {
   showLottoList(gameState.lottos);
   elements.purchaseAmount.textContent = `총 ${ticket}개를 구매하였습니다.`;
-  elements.lottosDiv.classList.remove('hidden');
-  elements.checkUserNumberDiv.classList.remove('hidden');
+  elements.lottosDiv.classList.remove(HIDDEN_CLASS);
+  elements.checkUserNumberDiv.classList.remove(HIDDEN_CLASS);
   bindClipboardCopyEvent();
   showToast(`총 ${ticket}개를 구매하였습니다.`, 'success');
   elements.purchaseLottoButton.disabled = true;
   resetInputs(['user-money']);
 }
 function getUserNumbers() {
-  const inputIds = [
-    'first-number',
-    'second-number',
-    'third-number',
-    'fourth-number',
-    'fifth-number',
-    'sixth-number',
-  ];
-  const userNumbers = inputIds.map((id) => document.getElementById(id).value);
+  const userNumbers = INPUT_IDS.map((id) => document.getElementById(id).value);
   const bonusNumber = document.getElementById('bonus-number').value;
   return { userNumbers, bonusNumber };
 }
@@ -88,31 +80,24 @@ function copyTextToClipboard(text) {
   });
 }
 function bindClipboardCopyEvent() {
-  const lottoNumbersElements = [...document.getElementsByClassName('lotto')];
-  lottoNumbersElements.forEach((element) =>
-    element.addEventListener('click', () => {
-      copyTextToClipboard(element.children[1].textContent);
-    }),
-  );
+  document.body.addEventListener('click', (event) => {
+    const lottoElement = event.target.closest('.lotto');
+    if (lottoElement) {
+      copyTextToClipboard(lottoElement.children[1].textContent);
+    }
+  });
 }
 
 function resetUI() {
-  elements.checkUserNumberDiv.classList.add('hidden');
-  elements.lottosDiv.classList.add('hidden');
+  elements.checkUserNumberDiv.classList.add(HIDDEN_CLASS);
+  elements.lottosDiv.classList.add(HIDDEN_CLASS);
   elements.resultModal.close();
   elements.purchaseLottoButton.disabled = false;
 }
 function retryGame() {
   gameState.resetGameState();
-  resetInputs([
-    'first-number',
-    'second-number',
-    'third-number',
-    'fourth-number',
-    'fifth-number',
-    'sixth-number',
-    'bonus-number',
-  ]);
+  resetInputs([...INPUT_IDS, 'bonus-number']);
+
   resetLottoList();
   updateWinCount({
     THREE_MATCH: 0,
@@ -125,8 +110,8 @@ function retryGame() {
 
   showToast('게임을 다시 하시겠습니까?', 'success');
 }
-function handleNumberInput() {
-  const input = this.value;
+function handleNumberInput(event) {
+  const input = event.target.value;
 
   const numbers = input
     .trim()
@@ -135,16 +120,8 @@ function handleNumberInput() {
     .filter((num) => num !== '')
     .slice(0, 6);
   if (numbers.length !== 6) return;
-  const ids = [
-    'first-number',
-    'second-number',
-    'third-number',
-    'fourth-number',
-    'fifth-number',
-    'sixth-number',
-  ];
-
-  ids.forEach((id, index) => {
+  console.log(numbers);
+  INPUT_IDS.forEach((id, index) => {
     document.getElementById(id).value = numbers[index] || '';
   });
 }

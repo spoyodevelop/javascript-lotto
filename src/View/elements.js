@@ -1,4 +1,5 @@
 export const elements = {
+  app: document.getElementById('app'),
   userMoneyInput: document.getElementById('user-money'),
   purchaseLottoButton: document.getElementById('purchase-lotto'),
   lottosDiv: document.getElementById('lottos'),

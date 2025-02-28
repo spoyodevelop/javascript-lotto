@@ -6,24 +6,23 @@ import {
   retryGame,
 } from './service/GameService.js';
 import { initPrizeBoard, closeResultModal } from './View/LottoView.js';
+import { INPUT_IDS } from './settings/webSettings.js';
 
 function bindEventListeners() {
-  elements.purchaseLottoButton.addEventListener('click', handlePurchaseLotto);
-  elements.checkResultButton.addEventListener('click', handleCheckResult);
-  elements.resetButton.addEventListener('click', retryGame);
-  elements.closeButton.addEventListener('click', closeResultModal);
-  elements.firstNumber.addEventListener('input', handleNumberInput);
+  elements.app.addEventListener('click', function (event) {
+    if (event.target.matches('#purchase-lotto')) handlePurchaseLotto();
+    else if (event.target.matches('#check-result')) handleCheckResult();
+    else if (event.target.matches('#reset-game')) retryGame();
+    else if (event.target.matches('#close-button')) closeResultModal();
+  });
+
+  elements.app.addEventListener('input', function (event) {
+    if (event.target.matches('#first-number')) handleNumberInput(event);
+  });
 }
+
 function bindEnterKeyDownListener() {
-  [
-    'first-number',
-    'second-number',
-    'third-number',
-    'fourth-number',
-    'fifth-number',
-    'sixth-number',
-    'bonus-number',
-  ].forEach((id) => {
+  [...INPUT_IDS, 'bonus-number'].forEach((id) => {
     // 음..
     // 일단, enter를 누르면 handleCheckResult를 불러옵니다.
     // 그런데, enter를 누르자 마자 dialog가 popup이 되고,
