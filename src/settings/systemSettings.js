@@ -12,6 +12,7 @@ const lottoGameSettings = {
   lottoPrice: 1_000,
   minLottoNumber: 1,
   maxLottoNumber: 45,
+  maxStake: 300_000_000,
 };
 
 const lottoResults = {

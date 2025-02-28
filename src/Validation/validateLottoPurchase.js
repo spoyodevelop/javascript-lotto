@@ -6,6 +6,8 @@ export default function validateLottoPurchase(input) {
   const money = validateNumber(input);
   if (money < lottoGameSettings.lottoPrice)
     throw new Error(ERROR_MESSAGE.notEnoughMoney);
+  if (money > lottoGameSettings.maxStake)
+    throw new Error(ERROR_MESSAGE.tooMuchMoney);
   if (money % lottoGameSettings.lottoPrice !== 0)
     throw new Error(ERROR_MESSAGE.notANote);
 

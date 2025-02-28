@@ -15,6 +15,7 @@ const ERROR_MESSAGE = Object.freeze({
   notANote: `[ERROR] 금액은 ${lottoGameSettings.lottoPrice.toLocaleString()} 단위로 입력하셔야 합니다. 다시 입력해주세요.`,
   notEnoughMoney: `[ERROR] 최소 금액은 ${lottoGameSettings.lottoPrice.toLocaleString()}원 입니다. 다시 입력해주세요.`,
   invalidCommand: '[ERROR] 유효하지 않은 입력입니다. y/n으로 입력해주세요.',
+  tooMuchMoney: `[ERROR] 금액은 ${lottoGameSettings.maxStake.toLocaleString()}원 이상 구매할 수 없어요. 너무 많이 사는것 아닐까요?`,
 });
 
 export default ERROR_MESSAGE;
