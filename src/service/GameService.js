@@ -49,7 +49,11 @@ function copyTextToClipboard(text) {
     showToast(`로또 값 ${text}이 클립보드에 복사되었습니다.`, 'success');
   });
 }
+
 function bindClipboardCopyEvent() {
+  if (bindClipboardCopyEvent.isBound) return;
+  bindClipboardCopyEvent.isBound = true;
+
   document.body.addEventListener('click', (event) => {
     const lottoElement = event.target.closest('.lotto');
     if (lottoElement) {
@@ -57,7 +61,6 @@ function bindClipboardCopyEvent() {
     }
   });
 }
-
 function retryGame() {
   gameState.resetGameState();
   resetInputs([...INPUT_IDS, 'bonus-number']);
