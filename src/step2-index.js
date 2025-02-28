@@ -14,6 +14,7 @@ function bindEventListeners() {
     else if (event.target.matches('#check-result')) handleCheckResult();
     else if (event.target.matches('#reset-game')) retryGame();
     else if (event.target.matches('#close-button')) closeResultModal();
+    else if (event.target.matches('#result-modal')) closeResultModal();
   });
 
   elements.app.addEventListener('input', function (event) {
