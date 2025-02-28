@@ -44,6 +44,7 @@ function updatePurchaseUI(ticket) {
   bindClipboardCopyEvent();
   showToast(`총 ${ticket}개를 구매하였습니다.`, 'success');
   elements.purchaseLottoButton.disabled = true;
+  elements.userMoneyInput.disabled = true;
   resetInputs(['user-money']);
 }
 function getUserNumbers() {
@@ -93,6 +94,7 @@ function resetUI() {
   elements.lottosDiv.classList.add(HIDDEN_CLASS);
   elements.resultModal.close();
   elements.purchaseLottoButton.disabled = false;
+  elements.userMoneyInput.disabled = false;
 }
 function retryGame() {
   gameState.resetGameState();
@@ -108,7 +110,7 @@ function retryGame() {
   });
   resetUI();
 
-  showToast('게임을 다시 하시겠습니까?', 'success');
+  showToast('게임을 다시 하시겠습니까?', 'info');
 }
 function handleNumberInput(event) {
   const input = event.target.value;
