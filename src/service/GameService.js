@@ -39,6 +39,12 @@ function handleCheckResult() {
     showRevenueRate(revenueRate);
     updateWinCount(winCount);
     showToast('총 수익률을 계산하여 완료하였습니다.', 'success');
+    setTimeout(() => {
+      showToast(
+        '다시 시도하기를 하면 게임을 다시 시작할수 있어요. 다시 해볼래요?',
+        'info',
+      );
+    }, 3000);
     elements.resultModal.showModal();
   } catch (error) {
     showToast(error.message);
@@ -75,7 +81,7 @@ function retryGame() {
   });
   resetUI();
 
-  showToast('게임을 다시 하시겠습니까?', 'info');
+  showToast('게임을 다시 시작했어요.', 'info');
 }
 function handleNumberInput(event) {
   const input = event.target.value;
