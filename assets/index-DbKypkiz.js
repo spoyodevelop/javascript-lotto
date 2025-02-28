@@ -305,15 +305,24 @@ function showLottoList(lottos) {
     }
     elements.lottoList.appendChild(fragment);
   }
-  elements.lottoList.addEventListener("scroll", () => {
+  if (elements.lottoList.lottoScrollHandler) {
+    elements.lottoList.removeEventListener(
+      "scroll",
+      elements.lottoList.lottoScrollHandler
+    );
+  }
+  const lottoScrollHandler = () => {
     if (elements.lottoList.scrollTop + elements.lottoList.clientHeight >= elements.lottoList.scrollHeight) {
       start += visibleItems;
       if (start < totalItems) renderItems();
     }
-  });
+  };
+  elements.lottoList.lottoScrollHandler = lottoScrollHandler;
+  elements.lottoList.addEventListener("scroll", lottoScrollHandler);
   renderItems();
 }
 function resetLottoList() {
+  elements.lottoList.scrollTop = 0;
   while (elements.lottoList.firstChild) {
     elements.lottoList.removeChild(elements.lottoList.firstChild);
   }
@@ -362,6 +371,7 @@ function handlePurchaseLotto() {
     elements.checkUserNumberDiv.classList.remove("hidden");
     bindClipboardCopyEvent();
     showToast(`총 ${ticket}개를 구매하였습니다.`, "success");
+    elements.purchaseLottoButton.disabled = true;
     resetInputs(["user-money"]);
   } catch (error) {
     showToast(error.message);
@@ -431,6 +441,7 @@ function retryGame() {
   elements.checkUserNumberDiv.classList.add("hidden");
   elements.lottosDiv.classList.add("hidden");
   elements.resultModal.close();
+  elements.purchaseLottoButton.disabled = false;
   showToast("게임을 다시 하시겠습니까?", "success");
 }
 function handleNumberInput() {
