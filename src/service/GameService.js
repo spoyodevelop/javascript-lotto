@@ -22,48 +22,58 @@ import showToast from '../View/ToastView.js';
 function handlePurchaseLotto() {
   const inputValue = elements.userMoneyInput.value.trim();
   try {
-    const ticket = validateLottoPurchase(inputValue);
-    gameState.setPurchasePrice(+inputValue);
-    gameState.setLottos(makeLotto(ticket, 'web'));
+    const ticket = processLottoPurchase(inputValue);
     showLottoList(gameState.lottos);
-    elements.purchaseAmount.textContent = `총 ${ticket}개를 구매하였습니다.`;
-    elements.lottosDiv.classList.remove('hidden');
-    elements.checkUserNumberDiv.classList.remove('hidden');
-    bindClipboardCopyEvent();
-    showToast(`총 ${ticket}개를 구매하였습니다.`, 'success');
-    elements.purchaseLottoButton.disabled = true;
-    resetInputs(['user-money']);
+    updatePurchaseUI(ticket);
   } catch (error) {
     showToast(error.message);
     resetInputs(['user-money']);
   }
 }
+function processLottoPurchase(inputValue) {
+  const ticket = validateLottoPurchase(inputValue);
+  gameState.setPurchasePrice(+inputValue);
+  gameState.setLottos(makeLotto(ticket, 'web'));
+  return ticket;
+}
+function updatePurchaseUI(ticket) {
+  showLottoList(gameState.lottos);
+  elements.purchaseAmount.textContent = `총 ${ticket}개를 구매하였습니다.`;
+  elements.lottosDiv.classList.remove('hidden');
+  elements.checkUserNumberDiv.classList.remove('hidden');
+  bindClipboardCopyEvent();
+  showToast(`총 ${ticket}개를 구매하였습니다.`, 'success');
+  elements.purchaseLottoButton.disabled = true;
+  resetInputs(['user-money']);
+}
+function getUserNumbers() {
+  const inputIds = [
+    'first-number',
+    'second-number',
+    'third-number',
+    'fourth-number',
+    'fifth-number',
+    'sixth-number',
+  ];
+  const userNumbers = inputIds.map((id) => document.getElementById(id).value);
+  const bonusNumber = document.getElementById('bonus-number').value;
+  return { userNumbers, bonusNumber };
+}
 
+function calculateLottos(parsedLotto) {
+  const winCount = calculateWins(gameState.lottos, parsedLotto);
+  const totalPrize = calculatePrize(winCount, lottoResults.prizeMoney);
+  const revenueRate = calculateRevenueRate(totalPrize, gameState.purchasePrice);
+  return { winCount, revenueRate };
+}
 function handleCheckResult() {
   try {
-    const inputIds = [
-      'first-number',
-      'second-number',
-      'third-number',
-      'fourth-number',
-      'fifth-number',
-      'sixth-number',
-    ];
-    const userNumbers = inputIds.map((id) => document.getElementById(id).value);
-    const bonusNumber = document.getElementById('bonus-number').value;
-
+    const { userNumbers, bonusNumber } = getUserNumbers();
     const userLotto = new Lotto(userNumbers);
     // 혹여나, 리셋하고 싶으시면, 이 주석을 풀기 바랍니다.
     // resetInputs([...inputIds, 'bonus-number']);
-
     const parsedLotto = validateBonusNumber(userLotto, bonusNumber);
-    const winCount = calculateWins(gameState.lottos, parsedLotto);
-    const totalPrize = calculatePrize(winCount, lottoResults.prizeMoney);
-    const revenueRate = calculateRevenueRate(
-      totalPrize,
-      gameState.purchasePrice,
-    );
-
+    const { winCount, revenueRate } = calculateLottos(parsedLotto);
     showRevenueRate(revenueRate);
     updateWinCount(winCount);
     showToast('총 수익률을 계산하여 완료하였습니다.', 'success');
@@ -85,6 +95,13 @@ function bindClipboardCopyEvent() {
     }),
   );
 }
+
+function resetUI() {
+  elements.checkUserNumberDiv.classList.add('hidden');
+  elements.lottosDiv.classList.add('hidden');
+  elements.resultModal.close();
+  elements.purchaseLottoButton.disabled = false;
+}
 function retryGame() {
   gameState.resetGameState();
   resetInputs([
@@ -104,10 +121,8 @@ function retryGame() {
     FIVE_MATCH_WITH_BONUS: 0,
     SIX_MATCH: 0,
   });
-  elements.checkUserNumberDiv.classList.add('hidden');
-  elements.lottosDiv.classList.add('hidden');
-  elements.resultModal.close();
-  elements.purchaseLottoButton.disabled = false;
+  resetUI();
+
   showToast('게임을 다시 하시겠습니까?', 'success');
 }
 function handleNumberInput() {
