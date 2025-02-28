@@ -4,23 +4,24 @@
     <meta charset="UTF-8" />
     <title>🎱 행운의 로또</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" crossorigin src="/javascript-lotto/assets/index-DbKypkiz.js"></script>
+    <script type="module" crossorigin src="/javascript-lotto/assets/index-CoIQKhBR.js"></script>
     <link rel="stylesheet" crossorigin href="/javascript-lotto/assets/index-DxgArfwO.css">
   </head>
 
   <body>
     <div id="app" class="container">
       <header class="lotto-header">
-        <p class="lotto-title white-font">🎱 행운의 로또</p>
+        <h2 class="lotto-title white-font">🎱 행운의 로또</h2>
       </header>
       <div class="lotto-layout">
         <h2 class="lotto-title margin-bottom-m margin-top-l">
           🎱 내 번호 당첨 확인 🎱
         </h2>
         <div class="ask-user-money-layout">
-          <p class="margin-bottom-xs">구입할 금액을 입력해주세요.</p>
+          <label for="user-money" class="margin-bottom-xs"
+            >구입할 금액을 입력해주세요.</label
+          >
           <div class="user-money-input-layout margin-bottom-m">
-            <label for="user-money"></label>
             <input
               type="number"
               id="user-money"
@@ -41,12 +42,12 @@
           id="check-user-number"
           class="user-number-container margin-bottom-m hidden"
         >
-          <p class="number-details">
+          <label class="number-details">
             지난 주 당첨번호 6개와 보너스 번호 1개를 입력해주세요.
-          </p>
+          </label>
           <div class="number-labels">
-            <p>당첨 번호</p>
-            <p>보너스 번호</p>
+            <label for="user-lotto-numbers">당첨 번호</label>
+            <label for="user-bouns-number">보너스 번호</label>
           </div>
           <div class="user-input-numbers">
             <ul class="user-input-lotto-numbers">

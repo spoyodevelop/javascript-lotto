@@ -45,6 +45,7 @@ var _numbers, _Lotto_instances, lottoValidation_fn;
   }
 })();
 const elements = {
+  app: document.getElementById("app"),
   userMoneyInput: document.getElementById("user-money"),
   purchaseLottoButton: document.getElementById("purchase-lotto"),
   lottosDiv: document.getElementById("lottos"),
@@ -149,6 +150,167 @@ const gameState = new class State {
     this.lottos = [];
   }
 }();
+function validateBonusNumber(lotto, bonusNumber) {
+  validateNumber(bonusNumber);
+  validateNumberInRange([bonusNumber]);
+  if (lotto.numbers.includes(Number(bonusNumber)))
+    throw new Error(ERROR_MESSAGE.duplicatedBonusNumbers);
+  return { checkedLotto: lotto, checkedBonusNumber: Number(bonusNumber) };
+}
+function showToast(message, type = "error", duration = 3e3) {
+  let toastContainer = document.querySelector(".toast-container");
+  if (!toastContainer) {
+    toastContainer = document.createElement("div");
+    toastContainer.className = "toast-container";
+    document.body.appendChild(toastContainer);
+  }
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  if (type == "error") message = message.replace("[ERROR]", "");
+  toast.innerHTML = message;
+  toastContainer.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 100);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+  toast.addEventListener("click", () => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  });
+}
+const INPUT_IDS = [
+  "first-number",
+  "second-number",
+  "third-number",
+  "fourth-number",
+  "fifth-number",
+  "sixth-number"
+];
+const HIDDEN_CLASS = "hidden";
+function initPrizeBoard() {
+  const idMapping = {
+    THREE_MATCH: "three-match-price",
+    FOUR_MATCH: "four-match-price",
+    FIVE_MATCH: "five-match-price",
+    FIVE_MATCH_WITH_BONUS: "five-match-with-bonus-price",
+    SIX_MATCH: "six-match-price"
+  };
+  Object.entries(idMapping).forEach(([key, id]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = lottoResults.prizeMoney[key].toLocaleString();
+    }
+  });
+}
+function getUserNumbers() {
+  const userNumbers = INPUT_IDS.map((id) => document.getElementById(id).value);
+  const bonusNumber = document.getElementById("bonus-number").value;
+  return { userNumbers, bonusNumber };
+}
+function resetInputs(ids) {
+  ids.forEach((id) => {
+    const input = document.getElementById(id);
+    if (input) input.value = "";
+  });
+}
+function showLottoList(lottos) {
+  resetLottoList();
+  const totalItems = lottos.length;
+  const visibleItems = 100;
+  let start = 0;
+  function renderItems() {
+    const fragment = document.createDocumentFragment();
+    for (let i = start; i < Math.min(start + visibleItems, totalItems); i++) {
+      const lotto = lottos[i];
+      const li = document.createElement("li");
+      li.classList.add("lotto");
+      const img = document.createElement("img");
+      img.src = "./ticket.png";
+      img.alt = "Lotto Ticket";
+      img.classList.add("lotto-ticket");
+      const span = document.createElement("span");
+      span.textContent = lotto.numbers.join(", ");
+      span.classList.add("lotto-numbers");
+      li.appendChild(img);
+      li.appendChild(span);
+      fragment.appendChild(li);
+    }
+    elements.lottoList.appendChild(fragment);
+  }
+  if (elements.lottoList.lottoScrollHandler) {
+    elements.lottoList.removeEventListener(
+      "scroll",
+      elements.lottoList.lottoScrollHandler
+    );
+  }
+  const lottoScrollHandler = () => {
+    if (elements.lottoList.scrollTop + elements.lottoList.clientHeight >= elements.lottoList.scrollHeight) {
+      start += visibleItems;
+      if (start < totalItems) renderItems();
+    }
+  };
+  elements.lottoList.lottoScrollHandler = lottoScrollHandler;
+  elements.lottoList.addEventListener("scroll", lottoScrollHandler);
+  renderItems();
+}
+function updateWinCount(winCount) {
+  const idMapping = {
+    THREE_MATCH: "three-match-amount",
+    FOUR_MATCH: "four-match-amount",
+    FIVE_MATCH: "five-match-amount",
+    FIVE_MATCH_WITH_BONUS: "five-match-with-bonus-amount",
+    SIX_MATCH: "six-match-amount"
+  };
+  Object.entries(idMapping).forEach(([key, id]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = `${winCount[key].toLocaleString()}개`;
+    }
+  });
+}
+function resetLottoList() {
+  elements.lottoList.scrollTop = 0;
+  while (elements.lottoList.firstChild) {
+    elements.lottoList.removeChild(elements.lottoList.firstChild);
+  }
+}
+function showRevenueRate(revenueRate) {
+  elements.revenueRateResult.textContent = `당신의 총 수익률은 ${revenueRate.toFixed(
+    1
+  )}%입니다.`;
+}
+function closeResultModal() {
+  elements.resultModal.close();
+}
+function updatePurchaseUI(ticket) {
+  showLottoList(gameState.lottos);
+  elements.purchaseAmount.textContent = `총 ${ticket}개를 구매하였습니다.`;
+  elements.lottosDiv.classList.remove(HIDDEN_CLASS);
+  elements.checkUserNumberDiv.classList.remove(HIDDEN_CLASS);
+  bindClipboardCopyEvent();
+  showToast(`총 ${ticket}개를 구매하였습니다.`, "success");
+  elements.purchaseLottoButton.disabled = true;
+  elements.userMoneyInput.disabled = true;
+  resetInputs(["user-money"]);
+}
+function resetUI() {
+  elements.checkUserNumberDiv.classList.add(HIDDEN_CLASS);
+  elements.lottosDiv.classList.add(HIDDEN_CLASS);
+  elements.resultModal.close();
+  elements.purchaseLottoButton.disabled = false;
+  elements.userMoneyInput.disabled = false;
+}
+function validateLottoPurchase(input) {
+  const money = validateNumber(input);
+  if (money < lottoGameSettings.lottoPrice)
+    throw new Error(ERROR_MESSAGE.notEnoughMoney);
+  if (money % lottoGameSettings.lottoPrice !== 0)
+    throw new Error(ERROR_MESSAGE.notANote);
+  return money / lottoGameSettings.lottoPrice;
+}
 function createNumberArray(min, max) {
   return Array.from({ length: max - min + 1 }, (_, i) => i + min);
 }
@@ -230,149 +392,24 @@ function calculatePrize(winCount, prizeMoney) {
 function calculateRevenueRate(total, purchasePrice) {
   return total / Number(purchasePrice) * 100;
 }
-function validateLottoPurchase(input) {
-  const money = validateNumber(input);
-  if (money < lottoGameSettings.lottoPrice)
-    throw new Error(ERROR_MESSAGE.notEnoughMoney);
-  if (money % lottoGameSettings.lottoPrice !== 0)
-    throw new Error(ERROR_MESSAGE.notANote);
-  return money / lottoGameSettings.lottoPrice;
+function processLottoPurchase(inputValue) {
+  const ticket = validateLottoPurchase(inputValue);
+  gameState.setPurchasePrice(+inputValue);
+  gameState.setLottos(makeLotto(ticket));
+  return ticket;
 }
-function validateBonusNumber(lotto, bonusNumber) {
-  validateNumber(bonusNumber);
-  validateNumberInRange([bonusNumber]);
-  if (lotto.numbers.includes(Number(bonusNumber)))
-    throw new Error(ERROR_MESSAGE.duplicatedBonusNumbers);
-  return { checkedLotto: lotto, checkedBonusNumber: Number(bonusNumber) };
-}
-function initPrizeBoard() {
-  const idMapping = {
-    THREE_MATCH: "three-match-price",
-    FOUR_MATCH: "four-match-price",
-    FIVE_MATCH: "five-match-price",
-    FIVE_MATCH_WITH_BONUS: "five-match-with-bonus-price",
-    SIX_MATCH: "six-match-price"
-  };
-  Object.entries(idMapping).forEach(([key, id]) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = lottoResults.prizeMoney[key].toLocaleString();
-    }
-  });
-}
-function resetInputs(ids) {
-  ids.forEach((id) => {
-    const input = document.getElementById(id);
-    if (input) input.value = "";
-  });
-}
-function updateWinCount(winCount) {
-  const idMapping = {
-    THREE_MATCH: "three-match-amount",
-    FOUR_MATCH: "four-match-amount",
-    FIVE_MATCH: "five-match-amount",
-    FIVE_MATCH_WITH_BONUS: "five-match-with-bonus-amount",
-    SIX_MATCH: "six-match-amount"
-  };
-  Object.entries(idMapping).forEach(([key, id]) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = `${winCount[key].toLocaleString()}개`;
-    }
-  });
-}
-function showLottoList(lottos) {
-  resetLottoList();
-  const totalItems = lottos.length;
-  const visibleItems = 100;
-  let start = 0;
-  function renderItems() {
-    const fragment = document.createDocumentFragment();
-    for (let i = start; i < Math.min(start + visibleItems, totalItems); i++) {
-      const lotto = lottos[i];
-      const li = document.createElement("li");
-      li.classList.add("lotto");
-      const img = document.createElement("img");
-      img.src = "./ticket.png";
-      img.alt = "Lotto Ticket";
-      img.classList.add("lotto-ticket");
-      const span = document.createElement("span");
-      span.textContent = lotto.numbers.join(", ");
-      span.classList.add("lotto-numbers");
-      li.appendChild(img);
-      li.appendChild(span);
-      fragment.appendChild(li);
-    }
-    elements.lottoList.appendChild(fragment);
-  }
-  if (elements.lottoList.lottoScrollHandler) {
-    elements.lottoList.removeEventListener(
-      "scroll",
-      elements.lottoList.lottoScrollHandler
-    );
-  }
-  const lottoScrollHandler = () => {
-    if (elements.lottoList.scrollTop + elements.lottoList.clientHeight >= elements.lottoList.scrollHeight) {
-      start += visibleItems;
-      if (start < totalItems) renderItems();
-    }
-  };
-  elements.lottoList.lottoScrollHandler = lottoScrollHandler;
-  elements.lottoList.addEventListener("scroll", lottoScrollHandler);
-  renderItems();
-}
-function resetLottoList() {
-  elements.lottoList.scrollTop = 0;
-  while (elements.lottoList.firstChild) {
-    elements.lottoList.removeChild(elements.lottoList.firstChild);
-  }
-}
-function showRevenueRate(revenueRate) {
-  elements.revenueRateResult.textContent = `당신의 총 수익률은 ${revenueRate.toFixed(
-    1
-  )}%입니다.`;
-}
-function closeResultModal() {
-  elements.resultModal.close();
-}
-function showToast(message, type = "error", duration = 3e3) {
-  let toastContainer = document.querySelector(".toast-container");
-  if (!toastContainer) {
-    toastContainer = document.createElement("div");
-    toastContainer.className = "toast-container";
-    document.body.appendChild(toastContainer);
-  }
-  const toast = document.createElement("div");
-  toast.className = `toast ${type}`;
-  if (type == "error") message = message.replace("[ERROR]", "");
-  toast.innerHTML = message;
-  toastContainer.appendChild(toast);
-  setTimeout(() => {
-    toast.classList.add("show");
-  }, 100);
-  setTimeout(() => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 300);
-  }, duration);
-  toast.addEventListener("click", () => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 300);
-  });
+function calculateLottos(parsedLotto) {
+  const winCount = calculateWins(gameState.lottos, parsedLotto);
+  const totalPrize = calculatePrize(winCount, lottoResults.prizeMoney);
+  const revenueRate = calculateRevenueRate(totalPrize, gameState.purchasePrice);
+  return { winCount, revenueRate };
 }
 function handlePurchaseLotto() {
   const inputValue = elements.userMoneyInput.value.trim();
   try {
-    const ticket = validateLottoPurchase(inputValue);
-    gameState.setPurchasePrice(+inputValue);
-    gameState.setLottos(makeLotto(ticket, "web"));
+    const ticket = processLottoPurchase(inputValue);
     showLottoList(gameState.lottos);
-    elements.purchaseAmount.textContent = `총 ${ticket}개를 구매하였습니다.`;
-    elements.lottosDiv.classList.remove("hidden");
-    elements.checkUserNumberDiv.classList.remove("hidden");
-    bindClipboardCopyEvent();
-    showToast(`총 ${ticket}개를 구매하였습니다.`, "success");
-    elements.purchaseLottoButton.disabled = true;
-    resetInputs(["user-money"]);
+    updatePurchaseUI(ticket);
   } catch (error) {
     showToast(error.message);
     resetInputs(["user-money"]);
@@ -380,24 +417,10 @@ function handlePurchaseLotto() {
 }
 function handleCheckResult() {
   try {
-    const inputIds = [
-      "first-number",
-      "second-number",
-      "third-number",
-      "fourth-number",
-      "fifth-number",
-      "sixth-number"
-    ];
-    const userNumbers = inputIds.map((id) => document.getElementById(id).value);
-    const bonusNumber = document.getElementById("bonus-number").value;
+    const { userNumbers, bonusNumber } = getUserNumbers();
     const userLotto = new Lotto(userNumbers);
     const parsedLotto = validateBonusNumber(userLotto, bonusNumber);
-    const winCount = calculateWins(gameState.lottos, parsedLotto);
-    const totalPrize = calculatePrize(winCount, lottoResults.prizeMoney);
-    const revenueRate = calculateRevenueRate(
-      totalPrize,
-      gameState.purchasePrice
-    );
+    const { winCount, revenueRate } = calculateLottos(parsedLotto);
     showRevenueRate(revenueRate);
     updateWinCount(winCount);
     showToast("총 수익률을 계산하여 완료하였습니다.", "success");
@@ -412,24 +435,16 @@ function copyTextToClipboard(text) {
   });
 }
 function bindClipboardCopyEvent() {
-  const lottoNumbersElements = [...document.getElementsByClassName("lotto")];
-  lottoNumbersElements.forEach(
-    (element) => element.addEventListener("click", () => {
-      copyTextToClipboard(element.children[1].textContent);
-    })
-  );
+  document.body.addEventListener("click", (event) => {
+    const lottoElement = event.target.closest(".lotto");
+    if (lottoElement) {
+      copyTextToClipboard(lottoElement.children[1].textContent);
+    }
+  });
 }
 function retryGame() {
   gameState.resetGameState();
-  resetInputs([
-    "first-number",
-    "second-number",
-    "third-number",
-    "fourth-number",
-    "fifth-number",
-    "sixth-number",
-    "bonus-number"
-  ]);
+  resetInputs([...INPUT_IDS, "bonus-number"]);
   resetLottoList();
   updateWinCount({
     THREE_MATCH: 0,
@@ -438,45 +453,32 @@ function retryGame() {
     FIVE_MATCH_WITH_BONUS: 0,
     SIX_MATCH: 0
   });
-  elements.checkUserNumberDiv.classList.add("hidden");
-  elements.lottosDiv.classList.add("hidden");
-  elements.resultModal.close();
-  elements.purchaseLottoButton.disabled = false;
-  showToast("게임을 다시 하시겠습니까?", "success");
+  resetUI();
+  showToast("게임을 다시 하시겠습니까?", "info");
 }
-function handleNumberInput() {
-  const input = this.value;
+function handleNumberInput(event) {
+  const input = event.target.value;
   const numbers = input.trim().split(",").map((num) => num.trim()).filter((num) => num !== "").slice(0, 6);
   if (numbers.length !== 6) return;
-  const ids = [
-    "first-number",
-    "second-number",
-    "third-number",
-    "fourth-number",
-    "fifth-number",
-    "sixth-number"
-  ];
-  ids.forEach((id, index) => {
+  console.log(numbers);
+  INPUT_IDS.forEach((id, index) => {
     document.getElementById(id).value = numbers[index] || "";
   });
 }
 function bindEventListeners() {
-  elements.purchaseLottoButton.addEventListener("click", handlePurchaseLotto);
-  elements.checkResultButton.addEventListener("click", handleCheckResult);
-  elements.resetButton.addEventListener("click", retryGame);
-  elements.closeButton.addEventListener("click", closeResultModal);
-  elements.firstNumber.addEventListener("input", handleNumberInput);
+  elements.app.addEventListener("click", function(event) {
+    if (event.target.matches("#purchase-lotto")) handlePurchaseLotto();
+    else if (event.target.matches("#check-result")) handleCheckResult();
+    else if (event.target.matches("#reset-game")) retryGame();
+    else if (event.target.matches("#close-button")) closeResultModal();
+    else if (event.target.matches("#result-modal")) closeResultModal();
+  });
+  elements.app.addEventListener("input", function(event) {
+    if (event.target.matches("#first-number")) handleNumberInput(event);
+  });
 }
 function bindEnterKeyDownListener() {
-  [
-    "first-number",
-    "second-number",
-    "third-number",
-    "fourth-number",
-    "fifth-number",
-    "sixth-number",
-    "bonus-number"
-  ].forEach((id) => {
+  [...INPUT_IDS, "bonus-number"].forEach((id) => {
     document.getElementById(id).addEventListener("keydown", (e) => {
       if (e.key === "Enter") setTimeout(handleCheckResult, 50);
     });
