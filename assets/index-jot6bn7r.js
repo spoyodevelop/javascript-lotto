@@ -64,7 +64,8 @@ const lottoGameSettings = {
   lottoSize: 6,
   lottoPrice: 1e3,
   minLottoNumber: 1,
-  maxLottoNumber: 45
+  maxLottoNumber: 45,
+  maxStake: 3e8
 };
 const lottoResults = {
   prizeMoney: {
@@ -87,7 +88,8 @@ const ERROR_MESSAGE = Object.freeze({
   numberOutOfRange: `[ERROR] 로또 번호는 ${lottoGameSettings.minLottoNumber}-${lottoGameSettings.maxLottoNumber} 사이여야 합니다. 다시 입력해주세요.`,
   notANote: `[ERROR] 금액은 ${lottoGameSettings.lottoPrice.toLocaleString()} 단위로 입력하셔야 합니다. 다시 입력해주세요.`,
   notEnoughMoney: `[ERROR] 최소 금액은 ${lottoGameSettings.lottoPrice.toLocaleString()}원 입니다. 다시 입력해주세요.`,
-  invalidCommand: "[ERROR] 유효하지 않은 입력입니다. y/n으로 입력해주세요."
+  invalidCommand: "[ERROR] 유효하지 않은 입력입니다. y/n으로 입력해주세요.",
+  tooMuchMoney: `[ERROR] 금액은 ${lottoGameSettings.maxStake.toLocaleString()}원 이상 구매할 수 없어요. 너무 많이 사는것 아닐까요?`
 });
 function validateNumberInRange(numbers) {
   if (numbers.some(
@@ -307,6 +309,8 @@ function validateLottoPurchase(input) {
   const money = validateNumber(input);
   if (money < lottoGameSettings.lottoPrice)
     throw new Error(ERROR_MESSAGE.notEnoughMoney);
+  if (money > lottoGameSettings.maxStake)
+    throw new Error(ERROR_MESSAGE.tooMuchMoney);
   if (money % lottoGameSettings.lottoPrice !== 0)
     throw new Error(ERROR_MESSAGE.notANote);
   return money / lottoGameSettings.lottoPrice;
