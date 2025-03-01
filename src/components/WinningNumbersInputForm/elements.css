@@ -1,0 +1,22 @@
+.user-number-container {
+  display: flex;
+  flex-direction: column;
+  width: 92%;
+}
+
+.number-details {
+  align-self: flex-start;
+  margin-bottom: 16px;
+}
+
+.user-input-lotto-numbers {
+  display: flex;
+  gap: 8px;
+}
+
+.user-input-numbers {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
