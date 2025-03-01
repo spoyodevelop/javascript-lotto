@@ -3,17 +3,67 @@ import {
   handleCheckResult,
   handlePurchaseLotto,
   handleNumberInput,
-  retryGame,
 } from './service/GameService.js';
 import { initPrizeBoard, closeResultModal } from './View/LottoView.js';
 import { INPUT_IDS } from './settings/webSettings.js';
+import PriceInputForm from './components/PriceInputForm/PriceInputForm.js';
+import LottoList from './components/LottoList/LottoList.js';
+import gameState from './state/state.js';
+import WinningNumbersInputForm from './components/WinningNumbersInputForm/WinningNumbersInputForm.js';
+import showToast from './View/ToastView.js';
+import GameResultDialog from './components/GameResultDialog/GameResultDialog.js';
 
 function bindEventListeners() {
+  PriceInputForm.init({
+    onPriceSubmit: (ticket) => {
+      try {
+        LottoList.showLottoList(gameState.lottos);
+        LottoList.updatePurchaseUI(ticket);
+      } catch (error) {
+        showToast(error.message);
+        PriceInputForm.reset();
+      }
+
+      WinningNumbersInputForm.show();
+    },
+  });
+
+  WinningNumbersInputForm.init({
+    onCheckResult: (winCount, revenueRate) => {
+      try {
+        GameResultDialog.show();
+        GameResultDialog.showRevenueRate(revenueRate);
+        GameResultDialog.updateWinCount(winCount);
+
+        showToast('총 수익률을 계산하여 완료하였습니다.', 'success');
+        setTimeout(() => {
+          showToast(
+            '다시 시도하기를 하면 게임을 다시 시작할수 있어요. 다시 해볼래요?',
+            'info',
+          );
+        }, 3000);
+      } catch (error) {
+        showToast(error.message);
+      }
+    },
+  });
+
+  GameResultDialog.init({
+    onRetryGame: () => {
+      PriceInputForm.reset();
+      LottoList.reset();
+      WinningNumbersInputForm.reset();
+      GameResultDialog.reset();
+
+      WinningNumbersInputForm.hide();
+      GameResultDialog.hide();
+
+      showToast('게임을 다시 시작했어요.', 'info');
+    },
+  });
+
   elements.app.addEventListener('click', function (event) {
-    if (event.target.matches('#purchase-lotto')) handlePurchaseLotto();
-    else if (event.target.matches('#check-result')) handleCheckResult();
-    else if (event.target.matches('#reset-game')) retryGame();
-    else if (event.target.matches('#close-button')) closeResultModal();
+    if (event.target.matches('#close-button')) closeResultModal();
     else if (event.target.matches('#result-modal')) closeResultModal();
   });
 
