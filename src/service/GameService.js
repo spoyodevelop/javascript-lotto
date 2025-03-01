@@ -3,7 +3,6 @@ import gameState from '../state/state.js';
 import { elements } from '../View/elements.js';
 import validateBonusNumber from '../Validation/validateBonusNumber.js';
 import {
-  showLottoList,
   resetInputs,
   showRevenueRate,
   updateWinCount,
@@ -12,6 +11,7 @@ import {
   getUserNumbers,
   resetUI,
 } from '../View/LottoView.js';
+import LottoList from '../components/LottoList/LottoList.js';
 import showToast from '../View/ToastView.js';
 import { INPUT_IDS } from '../settings/webSettings.js';
 import { processLottoPurchase, calculateLottos } from '../domain/GameLogic.js';
@@ -20,7 +20,7 @@ function handlePurchaseLotto() {
   const inputValue = elements.userMoneyInput.value.trim();
   try {
     const ticket = processLottoPurchase(inputValue);
-    showLottoList(gameState.lottos);
+    LottoList.showLottoList(gameState.lottos);
     updatePurchaseUI(ticket);
   } catch (error) {
     showToast(error.message);
@@ -50,23 +50,7 @@ function handleCheckResult() {
     showToast(error.message);
   }
 }
-function copyTextToClipboard(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    showToast(`로또 값 ${text}이 클립보드에 복사되었습니다.`, 'success');
-  });
-}
 
-function bindClipboardCopyEvent() {
-  if (bindClipboardCopyEvent.isBound) return;
-  bindClipboardCopyEvent.isBound = true;
-
-  document.body.addEventListener('click', (event) => {
-    const lottoElement = event.target.closest('.lotto');
-    if (lottoElement) {
-      copyTextToClipboard(lottoElement.children[1].textContent);
-    }
-  });
-}
 function retryGame() {
   gameState.resetGameState();
   resetInputs([...INPUT_IDS, 'bonus-number']);
@@ -93,16 +77,10 @@ function handleNumberInput(event) {
     .filter((num) => num !== '')
     .slice(0, 6);
   if (numbers.length !== 6) return;
-  console.log(numbers);
+
   INPUT_IDS.forEach((id, index) => {
     document.getElementById(id).value = numbers[index] || '';
   });
 }
 
-export {
-  handleCheckResult,
-  handlePurchaseLotto,
-  retryGame,
-  handleNumberInput,
-  bindClipboardCopyEvent,
-};
+export { handleCheckResult, handlePurchaseLotto, retryGame, handleNumberInput };
