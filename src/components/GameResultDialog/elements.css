@@ -1,0 +1,51 @@
+/* ========== Modal & Table ========== */
+.close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 14px;
+  height: 14px;
+  background: none;
+  border: none;
+}
+.result-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  height: 500px;
+  border: 1px solid var(--lotto-greyscale-5-12);
+  border-radius: 4px;
+  background-color: var(--lotto-greyscale-1);
+}
+.result-table {
+  width: 319px;
+  margin-bottom: 40px;
+}
+.result-detail-title th,
+.result-details th {
+  font-size: 15px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+.result-detail-title th {
+  font-weight: 600;
+}
+.result-details th {
+  padding: 8px;
+  font-weight: 400;
+}
+.result-detail-title tr,
+.result-details tr {
+  border-bottom: 1px solid var(--lotto-greyscale-5-12);
+}
+.revenue-rate-result {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  margin-bottom: 40px;
+}
