@@ -10,7 +10,7 @@ import PriceInputForm from './components/PriceInputForm/PriceInputForm.js';
 import LottoList from './components/LottoList/LottoList.js';
 import gameState from './state/state.js';
 import WinningNumbersInputForm from './components/WinningNumbersInputForm/WinningNumbersInputForm.js';
-import showToast from './View/ToastView.js';
+import Toast from './components/Toast/Toast.js';
 import GameResultDialog from './components/GameResultDialog/GameResultDialog.js';
 
 function bindEventListeners() {
@@ -20,7 +20,7 @@ function bindEventListeners() {
         LottoList.showLottoList(gameState.lottos);
         LottoList.updatePurchaseUI(ticket);
       } catch (error) {
-        showToast(error.message);
+        Toast.showToast(error.message);
         PriceInputForm.reset();
       }
 
@@ -35,15 +35,15 @@ function bindEventListeners() {
         GameResultDialog.showRevenueRate(revenueRate);
         GameResultDialog.updateWinCount(winCount);
 
-        showToast('총 수익률을 계산하여 완료하였습니다.', 'success');
+        Toast.showToast('총 수익률을 계산하여 완료하였습니다.', 'success');
         setTimeout(() => {
-          showToast(
+          Toast.showToast(
             '다시 시도하기를 하면 게임을 다시 시작할수 있어요. 다시 해볼래요?',
             'info',
           );
         }, 3000);
       } catch (error) {
-        showToast(error.message);
+        Toast.showToast(error.message);
       }
     },
   });
@@ -58,7 +58,7 @@ function bindEventListeners() {
       WinningNumbersInputForm.hide();
       GameResultDialog.hide();
 
-      showToast('게임을 다시 시작했어요.', 'info');
+      Toast.showToast('게임을 다시 시작했어요.', 'info');
     },
   });
 

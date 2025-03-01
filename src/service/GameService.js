@@ -12,7 +12,7 @@ import {
   resetUI,
 } from '../View/LottoView.js';
 import LottoList from '../components/LottoList/LottoList.js';
-import showToast from '../View/ToastView.js';
+import Toast from '../components/Toast/Toast.js';
 import { INPUT_IDS } from '../settings/webSettings.js';
 import { processLottoPurchase, calculateLottos } from '../domain/GameLogic.js';
 
@@ -23,7 +23,7 @@ function handlePurchaseLotto() {
     LottoList.showLottoList(gameState.lottos);
     updatePurchaseUI(ticket);
   } catch (error) {
-    showToast(error.message);
+    Toast.showToast(error.message);
     resetInputs(['user-money']);
   }
 }
@@ -38,16 +38,16 @@ function handleCheckResult() {
     const { winCount, revenueRate } = calculateLottos(parsedLotto);
     showRevenueRate(revenueRate);
     updateWinCount(winCount);
-    showToast('총 수익률을 계산하여 완료하였습니다.', 'success');
+    Toast.showToast('총 수익률을 계산하여 완료하였습니다.', 'success');
     setTimeout(() => {
-      showToast(
+      Toast.showToast(
         '다시 시도하기를 하면 게임을 다시 시작할수 있어요. 다시 해볼래요?',
         'info',
       );
     }, 3000);
     elements.resultModal.showModal();
   } catch (error) {
-    showToast(error.message);
+    Toast.showToast(error.message);
   }
 }
 
@@ -65,7 +65,7 @@ function retryGame() {
   });
   resetUI();
 
-  showToast('게임을 다시 시작했어요.', 'info');
+  Toast.showToast('게임을 다시 시작했어요.', 'info');
 }
 function handleNumberInput(event) {
   const input = event.target.value;

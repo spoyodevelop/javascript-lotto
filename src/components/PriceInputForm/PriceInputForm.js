@@ -1,7 +1,8 @@
-import { processLottoPurchase } from '../../domain/GameLogic';
-import { resetInputs } from '../../View/LottoView';
-import showToast from '../../View/ToastView';
-import { purchaseLottoButton, userMoneyInput } from './elements';
+import { processLottoPurchase } from '../../domain/GameLogic.js';
+import { resetInputs } from '../../View/LottoView.js';
+import { purchaseLottoButton, userMoneyInput } from './elements.js';
+
+import Toast from '../Toast/Toast.js';
 
 const PriceInputForm = {
   init: ({ onPriceSubmit }) => {
@@ -19,7 +20,7 @@ const PriceInputForm = {
 
       PriceInputForm.onPriceSubmit(ticket);
     } catch (error) {
-      showToast(error.message);
+      Toast.showToast(error.message);
       PriceInputForm.reset();
     }
   },

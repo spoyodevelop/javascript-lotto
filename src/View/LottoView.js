@@ -2,7 +2,7 @@ import { lottoResults } from '../settings/systemSettings.js';
 import { elements } from './elements.js';
 import gameState from '../state/state.js';
 
-import showToast from './ToastView.js';
+import Toast from '../components/Toast/Toast.js';
 import { HIDDEN_CLASS, INPUT_IDS } from '../settings/webSettings.js';
 import LottoList from '../components/LottoList/LottoList.js';
 function initPrizeBoard() {
@@ -73,7 +73,7 @@ function updatePurchaseUI(ticket) {
   elements.lottosDiv.classList.remove(HIDDEN_CLASS);
   elements.checkUserNumberDiv.classList.remove(HIDDEN_CLASS);
   LottoList.bindClipboardCopyEvent();
-  showToast(`총 ${ticket}개를 구매하였습니다.`, 'success');
+  Toast.showToast(`총 ${ticket}개를 구매하였습니다.`, 'success');
   elements.purchaseLottoButton.disabled = true;
   elements.userMoneyInput.disabled = true;
   resetInputs(['user-money']);

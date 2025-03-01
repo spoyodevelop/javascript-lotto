@@ -1,10 +1,10 @@
-import { HIDDEN_CLASS } from '../../settings/webSettings';
-import showToast from '../../View/ToastView';
-import { lottoList, lottosDiv, purchaseAmount } from './elements';
+import { HIDDEN_CLASS } from '../../settings/webSettings.js';
 
+import { lottoList, lottosDiv, purchaseAmount } from './elements.js';
+import Toast from '../Toast/Toast.js';
 function copyTextToClipboard(text) {
   navigator.clipboard.writeText(text).then(() => {
-    showToast(`로또 값 ${text}이 클립보드에 복사되었습니다.`, 'success');
+    Toast.showToast(`로또 값 ${text}이 클립보드에 복사되었습니다.`, 'success');
   });
 }
 
@@ -92,7 +92,7 @@ const LottoList = {
   },
   updatePurchaseUI(ticket) {
     purchaseAmount.textContent = `총 ${ticket}개를 구매하였습니다.`;
-    showToast(`총 ${ticket}개를 구매하였습니다.`, 'success');
+    Toast.showToast(`총 ${ticket}개를 구매하였습니다.`, 'success');
   },
 };
 
