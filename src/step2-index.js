@@ -30,21 +30,17 @@ function bindEventListeners() {
 
   WinningNumbersInputForm.init({
     onCheckResult: (winCount, revenueRate) => {
-      try {
-        GameResultDialog.show();
-        GameResultDialog.showRevenueRate(revenueRate);
-        GameResultDialog.updateWinCount(winCount);
+      GameResultDialog.show();
+      GameResultDialog.showRevenueRate(revenueRate);
+      GameResultDialog.updateWinCount(winCount);
 
-        Toast.showToast('총 수익률을 계산하여 완료하였습니다.', 'success');
-        setTimeout(() => {
-          Toast.showToast(
-            '다시 시도하기를 하면 게임을 다시 시작할수 있어요. 다시 해볼래요?',
-            'info',
-          );
-        }, 3000);
-      } catch (error) {
-        Toast.showToast(error.message);
-      }
+      Toast.showToast('총 수익률을 계산하여 완료하였습니다.', 'success');
+      setTimeout(() => {
+        Toast.showToast(
+          '다시 시도하기를 하면 게임을 다시 시작할수 있어요. 다시 해볼래요?',
+          'info',
+        );
+      }, 3000);
     },
   });
 
