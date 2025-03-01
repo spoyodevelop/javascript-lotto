@@ -29,6 +29,10 @@ const Toast = {
       setTimeout(() => toast.remove(), 300);
     });
   },
+  resetToast() {
+    let toastContainer = document.querySelector('.toast-container');
+    if (toastContainer) toastContainer.remove();
+  },
 };
 
 export default Toast;

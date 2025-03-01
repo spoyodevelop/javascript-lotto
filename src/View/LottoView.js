@@ -84,6 +84,7 @@ function resetUI() {
   elements.resultModal.close();
   elements.purchaseLottoButton.disabled = false;
   elements.userMoneyInput.disabled = false;
+  Toast.resetToast();
 }
 
 export {
