@@ -8,20 +8,19 @@ function copyTextToClipboard(text) {
   });
 }
 
-function bindClipboardCopyEvent() {
-  if (bindClipboardCopyEvent.isBound) return;
-  bindClipboardCopyEvent.isBound = true;
-
-  document.body.addEventListener('click', (event) => {
-    const lottoElement = event.target.closest('.lotto');
-    if (lottoElement) {
-      copyTextToClipboard(lottoElement.children[1].textContent);
-    }
-  });
-}
-
 const LottoList = {
-  showLottoList: (lottos) => {
+  bindClipboardCopyEvent() {
+    if (this.bindClipboardCopyEvent.isBound) return;
+    this.bindClipboardCopyEvent.isBound = true;
+
+    document.body.addEventListener('click', (event) => {
+      const lottoElement = event.target.closest('.lotto');
+      if (lottoElement) {
+        copyTextToClipboard(lottoElement.children[1].textContent);
+      }
+    });
+  },
+  showLottoList(lottos) {
     LottoList.reset();
 
     lottosDiv.classList.remove(HIDDEN_CLASS);
@@ -81,7 +80,7 @@ const LottoList = {
     lottoList.addEventListener('scroll', lottoScrollHandler);
 
     renderItems();
-    bindClipboardCopyEvent();
+    this.bindClipboardCopyEvent();
   },
   reset: () => {
     lottoList.scrollTop = 0;

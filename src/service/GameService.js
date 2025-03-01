@@ -51,6 +51,21 @@ function handleCheckResult() {
   }
 }
 
+function handleNumberInput(event) {
+  const input = event.target.value;
+
+  const numbers = input
+    .trim()
+    .split(',')
+    .map((num) => num.trim())
+    .filter((num) => num !== '')
+    .slice(0, 6);
+  if (numbers.length !== 6) return;
+
+  INPUT_IDS.forEach((id, index) => {
+    document.getElementById(id).value = numbers[index] || '';
+  });
+}
 function retryGame() {
   gameState.resetGameState();
   resetInputs([...INPUT_IDS, 'bonus-number']);
@@ -66,21 +81,6 @@ function retryGame() {
   resetUI();
 
   Toast.showToast('게임을 다시 시작했어요.', 'info');
-}
-function handleNumberInput(event) {
-  const input = event.target.value;
-
-  const numbers = input
-    .trim()
-    .split(',')
-    .map((num) => num.trim())
-    .filter((num) => num !== '')
-    .slice(0, 6);
-  if (numbers.length !== 6) return;
-
-  INPUT_IDS.forEach((id, index) => {
-    document.getElementById(id).value = numbers[index] || '';
-  });
 }
 
 export { handleCheckResult, handlePurchaseLotto, retryGame, handleNumberInput };
