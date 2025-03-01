@@ -1,5 +1,6 @@
 const Toast = {
   showToast(message, type = 'error', duration = 3000) {
+    if (type === 'info') duration = 2000;
     let toastContainer = document.querySelector('.toast-container');
     if (!toastContainer) {
       toastContainer = document.createElement('div');
@@ -14,18 +15,15 @@ const Toast = {
 
     toastContainer.appendChild(toast);
 
-    // 애니메이션 적용
     setTimeout(() => {
       toast.classList.add('show');
     }, 100);
 
-    // 자동 제거
     setTimeout(() => {
       toast.classList.remove('show');
       setTimeout(() => toast.remove(), 300);
     }, duration);
 
-    // 클릭 시 즉시 제거
     toast.addEventListener('click', () => {
       toast.classList.remove('show');
       setTimeout(() => toast.remove(), 300);
