@@ -1,0 +1,47 @@
+/* ========== Form & List Layouts ========== */
+.lotto-list-container {
+  display: flex;
+  flex-direction: column;
+  width: 92%;
+}
+
+.lottos-list {
+  margin-top: 10px;
+  width: 100%;
+  padding: 2px;
+  max-height: 140px;
+  overflow-y: scroll;
+}
+
+/* ========== Lotto Ticket & Numbers ========== */
+.lotto-ticket,
+.short {
+  width: 34px;
+  height: 36px;
+}
+.lotto-subtitle {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+  margin: 40px 0 20px;
+}
+.number-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+/* ========== Lotto Item ========== */
+.lotto {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.lotto:hover {
+  background-color: var(--lotto-primary-20);
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
