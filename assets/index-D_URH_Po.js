@@ -159,30 +159,37 @@ function validateBonusNumber(lotto, bonusNumber) {
     throw new Error(ERROR_MESSAGE.duplicatedBonusNumbers);
   return { checkedLotto: lotto, checkedBonusNumber: Number(bonusNumber) };
 }
-function showToast(message, type = "error", duration = 3e3) {
-  let toastContainer = document.querySelector(".toast-container");
-  if (!toastContainer) {
-    toastContainer = document.createElement("div");
-    toastContainer.className = "toast-container";
-    document.body.appendChild(toastContainer);
+const Toast = {
+  showToast(message, type = "error", duration = 3e3) {
+    if (type === "info") duration = 2e3;
+    let toastContainer = document.querySelector(".toast-container");
+    if (!toastContainer) {
+      toastContainer = document.createElement("div");
+      toastContainer.className = "toast-container";
+      document.body.appendChild(toastContainer);
+    }
+    const toast = document.createElement("div");
+    toast.className = `toast ${type}`;
+    if (type == "error") message = message.replace("[ERROR]", "");
+    toast.innerHTML = message;
+    toastContainer.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add("show");
+    }, 100);
+    setTimeout(() => {
+      toast.classList.remove("show");
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+    toast.addEventListener("click", () => {
+      toast.classList.remove("show");
+      setTimeout(() => toast.remove(), 300);
+    });
+  },
+  resetToast() {
+    let toastContainer = document.querySelector(".toast-container");
+    if (toastContainer) toastContainer.remove();
   }
-  const toast = document.createElement("div");
-  toast.className = `toast ${type}`;
-  if (type == "error") message = message.replace("[ERROR]", "");
-  toast.innerHTML = message;
-  toastContainer.appendChild(toast);
-  setTimeout(() => {
-    toast.classList.add("show");
-  }, 100);
-  setTimeout(() => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 300);
-  }, duration);
-  toast.addEventListener("click", () => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 300);
-  });
-}
+};
 const INPUT_IDS = [
   "first-number",
   "second-number",
@@ -192,6 +199,79 @@ const INPUT_IDS = [
   "sixth-number"
 ];
 const HIDDEN_CLASS = "hidden";
+const lottosDiv = document.getElementById("lottos");
+const lottoList = document.getElementById("lotto-list");
+const purchaseAmount = document.getElementById("purchase-amount");
+function copyTextToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    Toast.showToast(`로또 값 ${text}이 클립보드에 복사되었습니다.`, "success");
+  });
+}
+const LottoList = {
+  bindClipboardCopyEvent() {
+    if (this.bindClipboardCopyEvent.isBound) return;
+    this.bindClipboardCopyEvent.isBound = true;
+    document.body.addEventListener("click", (event) => {
+      const lottoElement = event.target.closest(".lotto");
+      if (lottoElement) {
+        copyTextToClipboard(lottoElement.children[1].textContent);
+      }
+    });
+  },
+  showLottoList(lottos) {
+    LottoList.reset();
+    lottosDiv.classList.remove(HIDDEN_CLASS);
+    const totalItems = lottos.length;
+    const visibleItems = 100;
+    let start = 0;
+    function renderItems() {
+      const fragment = document.createDocumentFragment();
+      for (let i = start; i < Math.min(start + visibleItems, totalItems); i++) {
+        const lotto = lottos[i];
+        const li = document.createElement("li");
+        li.classList.add("lotto");
+        const img = document.createElement("img");
+        img.src = "./ticket.png";
+        img.alt = "Lotto Ticket";
+        img.classList.add("lotto-ticket");
+        const span = document.createElement("span");
+        span.textContent = lotto.numbers.join(", ");
+        span.classList.add("lotto-numbers");
+        li.appendChild(img);
+        li.appendChild(span);
+        fragment.appendChild(li);
+      }
+      lottoList.appendChild(fragment);
+    }
+    if (lottoList.lottoScrollHandler) {
+      lottoList.removeEventListener("scroll", lottoList.lottoScrollHandler);
+    }
+    const lottoScrollHandler = () => {
+      if (lottoList.scrollTop + lottoList.clientHeight < lottoList.scrollHeight) {
+        return;
+      }
+      start += visibleItems;
+      if (start < totalItems) {
+        renderItems();
+      }
+    };
+    lottoList.lottoScrollHandler = lottoScrollHandler;
+    lottoList.addEventListener("scroll", lottoScrollHandler);
+    renderItems();
+    this.bindClipboardCopyEvent();
+  },
+  reset: () => {
+    lottoList.scrollTop = 0;
+    while (lottoList.firstChild) {
+      lottoList.removeChild(lottoList.firstChild);
+    }
+    lottosDiv.classList.add(HIDDEN_CLASS);
+  },
+  updatePurchaseUI(ticket) {
+    purchaseAmount.textContent = `총 ${ticket}개를 구매하였습니다.`;
+    Toast.showToast(`총 ${ticket}개를 구매하였습니다.`, "success");
+  }
+};
 function initPrizeBoard() {
   const idMapping = {
     THREE_MATCH: "three-match-price",
@@ -207,7 +287,7 @@ function initPrizeBoard() {
     }
   });
 }
-function getUserNumbers() {
+function getUserNumbers$1() {
   const userNumbers = INPUT_IDS.map((id) => document.getElementById(id).value);
   const bonusNumber = document.getElementById("bonus-number").value;
   return { userNumbers, bonusNumber };
@@ -217,46 +297,6 @@ function resetInputs(ids) {
     const input = document.getElementById(id);
     if (input) input.value = "";
   });
-}
-function showLottoList(lottos) {
-  resetLottoList();
-  const totalItems = lottos.length;
-  const visibleItems = 100;
-  let start = 0;
-  function renderItems() {
-    const fragment = document.createDocumentFragment();
-    for (let i = start; i < Math.min(start + visibleItems, totalItems); i++) {
-      const lotto = lottos[i];
-      const li = document.createElement("li");
-      li.classList.add("lotto");
-      const img = document.createElement("img");
-      img.src = "./ticket.png";
-      img.alt = "Lotto Ticket";
-      img.classList.add("lotto-ticket");
-      const span = document.createElement("span");
-      span.textContent = lotto.numbers.join(", ");
-      span.classList.add("lotto-numbers");
-      li.appendChild(img);
-      li.appendChild(span);
-      fragment.appendChild(li);
-    }
-    elements.lottoList.appendChild(fragment);
-  }
-  if (elements.lottoList.lottoScrollHandler) {
-    elements.lottoList.removeEventListener(
-      "scroll",
-      elements.lottoList.lottoScrollHandler
-    );
-  }
-  const lottoScrollHandler = () => {
-    if (elements.lottoList.scrollTop + elements.lottoList.clientHeight >= elements.lottoList.scrollHeight) {
-      start += visibleItems;
-      if (start < totalItems) renderItems();
-    }
-  };
-  elements.lottoList.lottoScrollHandler = lottoScrollHandler;
-  elements.lottoList.addEventListener("scroll", lottoScrollHandler);
-  renderItems();
 }
 function updateWinCount(winCount) {
   const idMapping = {
@@ -273,12 +313,6 @@ function updateWinCount(winCount) {
     }
   });
 }
-function resetLottoList() {
-  elements.lottoList.scrollTop = 0;
-  while (elements.lottoList.firstChild) {
-    elements.lottoList.removeChild(elements.lottoList.firstChild);
-  }
-}
 function showRevenueRate(revenueRate) {
   elements.revenueRateResult.textContent = `당신의 총 수익률은 ${revenueRate.toFixed(
     1
@@ -288,22 +322,15 @@ function closeResultModal() {
   elements.resultModal.close();
 }
 function updatePurchaseUI(ticket) {
-  showLottoList(gameState.lottos);
+  LottoList.showLottoList(gameState.lottos);
   elements.purchaseAmount.textContent = `총 ${ticket}개를 구매하였습니다.`;
   elements.lottosDiv.classList.remove(HIDDEN_CLASS);
   elements.checkUserNumberDiv.classList.remove(HIDDEN_CLASS);
-  bindClipboardCopyEvent();
-  showToast(`총 ${ticket}개를 구매하였습니다.`, "success");
+  LottoList.bindClipboardCopyEvent();
+  Toast.showToast(`총 ${ticket}개를 구매하였습니다.`, "success");
   elements.purchaseLottoButton.disabled = true;
   elements.userMoneyInput.disabled = true;
   resetInputs(["user-money"]);
-}
-function resetUI() {
-  elements.checkUserNumberDiv.classList.add(HIDDEN_CLASS);
-  elements.lottosDiv.classList.add(HIDDEN_CLASS);
-  elements.resultModal.close();
-  elements.purchaseLottoButton.disabled = false;
-  elements.userMoneyInput.disabled = false;
 }
 function validateLottoPurchase(input) {
   const money = validateNumber(input);
@@ -331,9 +358,9 @@ function getUniqueRandomNumbers(numberRange, count) {
   const shuffled = shuffleArray(numbers);
   return shuffled.slice(0, count);
 }
-function makeLotto(purchaseAmount, target) {
+function makeLotto(purchaseAmount2, target) {
   const lottos = [];
-  for (let i = 0; i < purchaseAmount; i++) {
+  for (let i = 0; i < purchaseAmount2; i++) {
     const numberRange = {
       min: lottoGameSettings.minLottoNumber,
       max: lottoGameSettings.maxLottoNumber
@@ -412,77 +439,197 @@ function handlePurchaseLotto() {
   const inputValue = elements.userMoneyInput.value.trim();
   try {
     const ticket = processLottoPurchase(inputValue);
-    showLottoList(gameState.lottos);
+    LottoList.showLottoList(gameState.lottos);
     updatePurchaseUI(ticket);
   } catch (error) {
-    showToast(error.message);
+    Toast.showToast(error.message);
     resetInputs(["user-money"]);
   }
 }
 function handleCheckResult() {
   try {
-    const { userNumbers, bonusNumber } = getUserNumbers();
+    const { userNumbers, bonusNumber } = getUserNumbers$1();
     const userLotto = new Lotto(userNumbers);
     const parsedLotto = validateBonusNumber(userLotto, bonusNumber);
     const { winCount, revenueRate } = calculateLottos(parsedLotto);
     showRevenueRate(revenueRate);
     updateWinCount(winCount);
-    showToast("총 수익률을 계산하여 완료하였습니다.", "success");
+    Toast.showToast("총 수익률을 계산하여 완료하였습니다.", "success");
     setTimeout(() => {
-      showToast(
+      Toast.showToast(
         "다시 시도하기를 하면 게임을 다시 시작할수 있어요. 다시 해볼래요?",
         "info"
       );
     }, 3e3);
     elements.resultModal.showModal();
   } catch (error) {
-    showToast(error.message);
+    Toast.showToast(error.message);
   }
-}
-function copyTextToClipboard(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    showToast(`로또 값 ${text}이 클립보드에 복사되었습니다.`, "success");
-  });
-}
-function bindClipboardCopyEvent() {
-  if (bindClipboardCopyEvent.isBound) return;
-  bindClipboardCopyEvent.isBound = true;
-  document.body.addEventListener("click", (event) => {
-    const lottoElement = event.target.closest(".lotto");
-    if (lottoElement) {
-      copyTextToClipboard(lottoElement.children[1].textContent);
-    }
-  });
-}
-function retryGame() {
-  gameState.resetGameState();
-  resetInputs([...INPUT_IDS, "bonus-number"]);
-  resetLottoList();
-  updateWinCount({
-    THREE_MATCH: 0,
-    FOUR_MATCH: 0,
-    FIVE_MATCH: 0,
-    FIVE_MATCH_WITH_BONUS: 0,
-    SIX_MATCH: 0
-  });
-  resetUI();
-  showToast("게임을 다시 시작했어요.", "info");
 }
 function handleNumberInput(event) {
   const input = event.target.value;
   const numbers = input.trim().split(",").map((num) => num.trim()).filter((num) => num !== "").slice(0, 6);
   if (numbers.length !== 6) return;
-  console.log(numbers);
   INPUT_IDS.forEach((id, index) => {
     document.getElementById(id).value = numbers[index] || "";
   });
 }
+const userMoneyInput = document.getElementById("user-money");
+const purchaseLottoButton = document.getElementById("purchase-lotto");
+const PriceInputForm = {
+  init: ({ onPriceSubmit }) => {
+    purchaseLottoButton.addEventListener("click", PriceInputForm.submitPrice);
+    PriceInputForm.onPriceSubmit = onPriceSubmit;
+  },
+  submitPrice: () => {
+    const inputValue = userMoneyInput.value.trim();
+    try {
+      const ticket = processLottoPurchase(inputValue);
+      purchaseLottoButton.disabled = true;
+      userMoneyInput.disabled = true;
+      PriceInputForm.reset();
+      PriceInputForm.onPriceSubmit(ticket);
+    } catch (error) {
+      Toast.showToast(error.message);
+      PriceInputForm.reset();
+    }
+  },
+  reset: () => {
+    resetInputs(["user-money"]);
+    purchaseLottoButton.disabled = false;
+    userMoneyInput.disabled = false;
+  },
+  onPriceSubmit: () => {
+    console.log("onPriceSubmit 이 설정되지 않았습니다.");
+  }
+};
+const checkUserNumberDiv = document.getElementById("check-user-number");
+const checkResultButton = document.getElementById("check-result");
+function getUserNumbers() {
+  const userNumbers = INPUT_IDS.map((id) => document.getElementById(id).value);
+  const bonusNumber = document.getElementById("bonus-number").value;
+  return { userNumbers, bonusNumber };
+}
+const WinningNumbersInputForm = {
+  init: ({ onCheckResult }) => {
+    checkResultButton.addEventListener(
+      "click",
+      WinningNumbersInputForm.checkResult
+    );
+    WinningNumbersInputForm.onCheckResult = onCheckResult;
+  },
+  show: () => {
+    checkUserNumberDiv.classList.remove(HIDDEN_CLASS);
+  },
+  hide: () => {
+    checkUserNumberDiv.classList.add(HIDDEN_CLASS);
+  },
+  reset: () => {
+    resetInputs([...INPUT_IDS, "bonus-number"]);
+  },
+  checkResult: () => {
+    try {
+      const { userNumbers, bonusNumber } = getUserNumbers();
+      const userLotto = new Lotto(userNumbers);
+      const parsedLotto = validateBonusNumber(userLotto, bonusNumber);
+      const { winCount, revenueRate } = calculateLottos(parsedLotto);
+      WinningNumbersInputForm.onCheckResult(winCount, revenueRate);
+    } catch (error) {
+      Toast.showToast(error.message, "error");
+    }
+  },
+  onCheckResult: () => {
+    console.log("onCheckResult 이 설정되지 않았습니다.");
+  }
+};
+const revenueRateResult = document.getElementById("revenue-rate-result");
+const resultModal = document.getElementById("result-modal");
+const resetButton = document.getElementById("reset-game");
+const GameResultDialog = {
+  init: ({ onRetryGame }) => {
+    resetButton.addEventListener("click", GameResultDialog.retryGame);
+    GameResultDialog.onRetryGame = onRetryGame;
+  },
+  show: () => {
+    resultModal.showModal();
+  },
+  hide: () => {
+    resultModal.close();
+  },
+  retryGame: () => {
+    gameState.resetGameState();
+    GameResultDialog.onRetryGame();
+  },
+  showRevenueRate: (revenueRate) => {
+    revenueRateResult.textContent = `당신의 총 수익률은 ${revenueRate.toFixed(
+      1
+    )}%입니다.`;
+  },
+  updateWinCount: (winCount) => {
+    const idMapping = {
+      THREE_MATCH: "three-match-amount",
+      FOUR_MATCH: "four-match-amount",
+      FIVE_MATCH: "five-match-amount",
+      FIVE_MATCH_WITH_BONUS: "five-match-with-bonus-amount",
+      SIX_MATCH: "six-match-amount"
+    };
+    Object.entries(idMapping).forEach(([key, id]) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = `${winCount[key].toLocaleString()}개`;
+      }
+    });
+  },
+  reset: () => {
+    GameResultDialog.updateWinCount({
+      THREE_MATCH: 0,
+      FOUR_MATCH: 0,
+      FIVE_MATCH: 0,
+      FIVE_MATCH_WITH_BONUS: 0,
+      SIX_MATCH: 0
+    });
+  }
+};
 function bindEventListeners() {
+  PriceInputForm.init({
+    onPriceSubmit: (ticket) => {
+      try {
+        LottoList.showLottoList(gameState.lottos);
+        LottoList.updatePurchaseUI(ticket);
+      } catch (error) {
+        Toast.showToast(error.message);
+        PriceInputForm.reset();
+      }
+      WinningNumbersInputForm.show();
+    }
+  });
+  WinningNumbersInputForm.init({
+    onCheckResult: (winCount, revenueRate) => {
+      GameResultDialog.show();
+      GameResultDialog.showRevenueRate(revenueRate);
+      GameResultDialog.updateWinCount(winCount);
+      Toast.showToast("총 수익률을 계산하여 완료하였습니다.", "success");
+      setTimeout(() => {
+        Toast.showToast(
+          "다시 시도하기를 하면 게임을 다시 시작할수 있어요. 다시 해볼래요?",
+          "info"
+        );
+      }, 1e3);
+    }
+  });
+  GameResultDialog.init({
+    onRetryGame: () => {
+      PriceInputForm.reset();
+      LottoList.reset();
+      WinningNumbersInputForm.reset();
+      GameResultDialog.reset();
+      WinningNumbersInputForm.hide();
+      GameResultDialog.hide();
+      Toast.showToast("게임을 다시 시작했어요.", "info");
+    }
+  });
   elements.app.addEventListener("click", function(event) {
-    if (event.target.matches("#purchase-lotto")) handlePurchaseLotto();
-    else if (event.target.matches("#check-result")) handleCheckResult();
-    else if (event.target.matches("#reset-game")) retryGame();
-    else if (event.target.matches("#close-button")) closeResultModal();
+    if (event.target.matches("#close-button")) closeResultModal();
     else if (event.target.matches("#result-modal")) closeResultModal();
   });
   elements.app.addEventListener("input", function(event) {
